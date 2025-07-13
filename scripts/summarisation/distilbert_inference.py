@@ -8,7 +8,7 @@ nltk.download('punkt')
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 # Load model & tokenizer
-model_path = "./models/distilbert-summarisation-v1"  # <-- adjust
+model_path = "./models/distilbert-summarisation-v1" 
 model = DistilBertForSequenceClassification.from_pretrained(model_path)
 tokenizer = DistilBertTokenizer.from_pretrained(model_path)
 model.to(DEVICE)
