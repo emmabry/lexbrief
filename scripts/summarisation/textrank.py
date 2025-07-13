@@ -76,9 +76,9 @@ def textrank_filter(source_path, labels_path, output_source_path, output_labels_
 
 if __name__ == "__main__":
     textrank_filter(
-        source_path="./data/eur-lexsum/processed-data/balanced_train.source",
-        labels_path="./data/eur-lexsum/processed-data/balanced_oracle_labels.txt",
-        output_source_path="./data/eur-lexsum/processed-data/textrank_train.source",
-        output_labels_path="./data/eur-lexsum/processed-data/textrank_oracle_labels.txt",
+        source_path="./data/eur-lexsum/processed-data/val-balanced_train.source",
+        labels_path="./data/eur-lexsum/processed-data/val-balanced_oracle_labels.txt",
+        output_source_path="./data/eur-lexsum/processed-data/val-textrank_train.source",
+        output_labels_path="./data/eur-lexsum/processed-data/val-textrank_oracle_labels.txt",
         keep_ratio=0.75
     )

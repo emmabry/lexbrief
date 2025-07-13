@@ -85,8 +85,8 @@ def balance_source_and_labels(source_path, labels_path, output_source_path, outp
 
 if __name__ == "__main__":
     balance_source_and_labels(
-        source_path="./data/eur-lexsum/processed-data/filtered.source",
-        labels_path="./data/eur-lexsum/processed-data/oracle_labels_merged.txt",
-        output_source_path="./data/eur-lexsum/processed-data/balanced_train.source",
-        output_labels_path="./data/eur-lexsum/processed-data/balanced_oracle_labels.txt"
+        source_path="./data/eur-lexsum/processed-data/filtered-val.source",
+        labels_path="./data/eur-lexsum/processed-data/val-oracle_labels_merged.txt",
+        output_source_path="./data/eur-lexsum/processed-data/val-balanced_train.source",
+        output_labels_path="./data/eur-lexsum/processed-data/val-balanced_oracle_labels.txt"
     )
