@@ -6,15 +6,11 @@ from concurrent.futures import ProcessPoolExecutor
 
 nltk.download('punkt')
 
-MAX_DOC_SENTENCES = 200
+MAX_DOC_SENTENCES = 200  # max doc length for oracle generation
 
 def get_trigrams(text):
     words = text.split()
-    trigrams = set()
-    for i in range(len(words) - 2):
-        trigram = (words[i], words[i + 1], words[i + 2])
-        trigrams.add(trigram)
-    return trigrams
+    return set(zip(words, words[1:], words[2:]))
 
 def greedy_extractive_summary(source_sentences, target_summary, max_sentences=32, trigram_blocking=True):
     scorer = rouge_scorer.RougeScorer(['rouge1'], use_stemmer=True)
@@ -23,9 +19,9 @@ def greedy_extractive_summary(source_sentences, target_summary, max_sentences=32
     selected_trigrams = set()
     current_best_score = 0.0
 
-    for i in range(max_sentences):
+    for _ in range(max_sentences):
         best_gain = 0.0
-        best_idx = None
+        best_index = None
         best_score = current_best_score
 
         for index, sentence in enumerate(source_sentences):
@@ -52,8 +48,7 @@ def greedy_extractive_summary(source_sentences, target_summary, max_sentences=32
         selected_trigrams.update(get_trigrams(source_sentences[best_index]))
         current_best_score = best_score
 
-    binary_labels = [1 if sentence in selected else 0 for sentence in source_sentences]
-
+    binary_labels = [1 if i in selected_set else 0 for i in range(len(source_sentences))]
     return selected, current_best_score, binary_labels
 
 def process_doc(args):
@@ -61,20 +56,14 @@ def process_doc(args):
     return greedy_extractive_summary(source, target)
 
 def process_batch(batch_sources, batch_targets, batch):
-
-    inputs = []
-    for i in range(len(batch_sources)):
-        inputs.append((batch_sources[i], batch_targets[i]))
+    inputs = [(src, tgt) for src, tgt in zip(batch_sources, batch_targets)]
 
     all_oracle_summaries = []
     all_binary_labels = []
     total_rouge = 0.0
 
     with ProcessPoolExecutor(max_workers=2) as executor:
-        futures = []
-        for item in inputs:
-            futures.append(executor.submit(process_doc, item))
-    
+        futures = [executor.submit(process_doc, item) for item in inputs]
         results = []
         for i, future in enumerate(futures):
             results.append(future.result())
@@ -86,28 +75,24 @@ def process_batch(batch_sources, batch_targets, batch):
         total_rouge += score
 
     avg_rouge = total_rouge / len(results)
-    print(f"Batch {batch} Average ROUGE-1 score: {avg_rouge:.4f}")
+    print(f"Batch {batch} Average ROUGE-1: {avg_rouge:.4f}")
 
-    with open(f"./data/eur-lexsum/processed-data/oracle_summaries_batch_{batch}.txt", "w", encoding="utf-8") as f:
+    with open(f"./data/eur-lexsum/processed-data/val-oracle_summaries_batch_{batch}.txt", "w", encoding="utf-8") as f:
         for summary in all_oracle_summaries:
             f.write("\n".join(summary) + "\n===\n")
 
-    with open(f"./data/eur-lexsum/processed-data/oracle_labels_batch_{batch}.txt", "w", encoding="utf-8") as f:
+    with open(f"./data/eur-lexsum/processed-data/val-oracle_labels_batch_{batch}.txt", "w", encoding="utf-8") as f:
         for labels in all_binary_labels:
-            label_str = ""
-            for label in labels:
-                label_str += str(label) + " "
-                f.write(label_str.strip() + "\n")
-
+            f.write(" ".join(str(label) for label in labels) + "\n")
 
     return avg_rouge
 
 if __name__ == "__main__":
-    with open("./data/eur-lexsum/raw-data/train.source", encoding="utf-8") as f:
+    with open("./data/eur-lexsum/raw-data/val.source", encoding="utf-8") as f:
         lines = f.readlines()
     source_docs = [sent_tokenize(line.strip(), language='english') for line in lines]
 
-    with open("./data/eur-lexsum/raw-data/train.target", encoding="utf-8") as f:
+    with open("./data/eur-lexsum/raw-data/val.target", encoding="utf-8") as f:
         target_summaries = [line.strip() for line in f]
 
     filtered_sources = []
@@ -126,24 +111,24 @@ if __name__ == "__main__":
     print(f"Kept {len(filtered_sources)} / {len(source_docs)} docs")
     print(f"Skipped {len(skipped_sources)} docs")
 
-    # Save skipped docs for later
-    with open("./data/eur-lexsum/raw-data/skipped.source", "w", encoding="utf-8") as f:
+    # Save skipped docs for record
+    with open("./data/eur-lexsum/raw-data/skipped-val.source", "w", encoding="utf-8") as f:
         for doc in skipped_sources:
-            for sentence in doc:
-                f.write(sentence.strip() + "\n")
+            for sent in doc:
+                f.write(sent.strip() + "\n")
             f.write("\n")
-    with open("./data/eur-lexsum/raw-data/skipped.target", "w", encoding="utf-8") as f:
-        for target in skipped_targets:
-            f.write(target.strip() + "\n")
+    with open("./data/eur-lexsum/raw-data/skipped-val.target", "w", encoding="utf-8") as f:
+        for tgt in skipped_targets:
+            f.write(tgt.strip() + "\n")
 
-    # Save filtered docs for later
-    with open("./data/eur-lexsum/processed-data/filtered.source", "w", encoding="utf-8") as f:
+    # Save filtered docs for oracle generation
+    with open("./data/eur-lexsum/processed-data/filtered-val.source", "w", encoding="utf-8") as f:
         for doc in filtered_sources:
-            for sentence in doc:
-                f.write(sentence.strip() + "\n")
-            f.write("\n")  # blank line separates documents
+            for sent in doc:
+                f.write(sent.strip() + "\n")
+            f.write("\n")
 
-    with open("./data/eur-lexsum/processed-data/filtered.target", "w", encoding="utf-8") as f:
+    with open("./data/eur-lexsum/processed-data/filtered-val.target", "w", encoding="utf-8") as f:
         for tgt in filtered_targets:
             f.write(tgt.strip() + "\n")
 
@@ -163,4 +148,4 @@ if __name__ == "__main__":
         overall_rouge += avg_rouge * len(batch_sources)
 
     overall_rouge /= len(filtered_sources)
-    print(f"Overall average ROUGE-1 score: {overall_rouge:.4f}")
+    print(f"Overall average ROUGE-1: {overall_rouge:.4f}")
