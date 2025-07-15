@@ -93,10 +93,17 @@ print(f"\nAverage ROUGE-1 F1: {avg_rouge1:.4f}")
 print(f"Average ROUGE-2 F1: {avg_rouge2:.4f}")
 print(f"Average ROUGE-L F1: {avg_rougeL:.4f}")
 
+from bert_score import score
+
+P, R, F1 = score(extracted_summaries, target_summaries, lang="en", verbose=True)
+
+print("Average BERTScore F1:", F1.mean().item())
+
 
 """
 RESULTS:
 Average ROUGE-1 F1: 0.4687
 Average ROUGE-2 F1: 0.1709
 Average ROUGE-L F1: 0.2038
+Average BERTScore F1: 0.8045
 """
