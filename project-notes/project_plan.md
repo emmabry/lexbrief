@@ -31,6 +31,8 @@ Going forth, I will aim for a hybrid approach which includes an extractive step 
 **Using**: RAG - LLaMa 3.1
 I have gotten this working decently, so the goal for this going forward is to improve performance for the web app (response times etc), and also to test out edge cases such as nonsense questions.
 
+**Additional feature**: Pre-generate 3-5 questions after document upload to help user engage with the text.
+
 
 ## GUI
 
@@ -56,3 +58,52 @@ I have gotten this working decently, so the goal for this going forward is to im
 	* Date of adoption
 	* Relationships (linked amendments, repeals, related directives)
 	* Keywords, summaries, multi-lingual versions.
+
+-
+# 6 Week Timeline
+
+## Week 1 (21 - 27 July)
+* Develop and test hybrid extractive + abstractive summarisation pipeline
+
+* Evaluate with ROUGE and BERTScore, comparing to previous baselines
+
+* Start performance optimizations on RAG Q&A (latency, edge cases)
+
+* Begin building out web app features: document upload & display, summary output
+
+## Week 2 (28 Jul - 3 Aug)
+* Finalise summarisation method
+
+* Complete integration of summariser and RAG Q&A into backend pipeline
+
+* Continue frontend development: implement question input, chatbot output
+
+* Integrate EUR-Lex API for document search and metadata display
+
+* Develop pre-generated questions feature
+
+## Week 3 (4 - 10 Aug)
+* Testing & bug fixing on summariser and QA pipeline integration
+
+* Complete main web app functionality (upload/search, summarise, Q&A)
+
+* Start internal user testing for usability and accuracy feedback
+
+* Prepare rough demo version of the app
+
+## Week 4 (11 - 17 Aug)
+* Collect and analyse feedback from internal testing; improve models and UI
+
+* Polish UI/UX and improve error handling and edge case coverage
+
+* Finalize demo app version and prepare demo presentation
+
+## Week 5 (18 - 24 Aug)
+* Present working app demo
+
+* Start writing up project report
+
+## Week 6 (25 - 31 Aug)
+* Finalise project report and documentation
+
+* Submit report by deadline
