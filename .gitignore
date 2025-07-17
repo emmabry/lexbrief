@@ -4,3 +4,4 @@ data/
 models/
 .env
 **/node_modules/
+__pycache__
