@@ -1,6 +1,6 @@
-from eurlex import get_data_by_celex_id, get_summary_by_celex_id, get_articles_by_celex_id
+from eurlex import get_data_by_celex_id, get_articles_by_celex_id
 from fastapi import FastAPI
-import requests
+import re
 
 app = FastAPI()
 
@@ -11,13 +11,13 @@ async def root():
 # Testing out packages for retrieving EUR-Lex data
 @app.get("/eurlex")
 async def eurlex():
-    data = get_data_by_celex_id('32013R0575')
-    print(data)
-    return data
+    data = get_data_by_celex_id('32025D1267')
+    preamble = data['preamble']['text']
+    articles = [data['articles'][i]['text'] for i in range(len(data['articles']))]
+    text = preamble + '\n\n' + '\n\n'.join(articles)
+    related_documents = data['related_documents']
+    print(text)
+    print(related_documents)
+    title = re.sub(r'\s+', ' ', data['title'].replace('\n', '')).strip()
 
-# Better for retrieving text
-@app.get("/eurlex_articles")
-async def eurlex_articles():
-    df = get_articles_by_celex_id('32013R0575')
-    print(df.head())
-    return df.text
+    return data
