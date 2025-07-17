@@ -52,14 +52,23 @@ I have gotten this working decently, so the goal for this going forward is to im
 
 
 ## EUR-Lex API Integration
-* User can select/search for a document to summarise & ask questions about within the app
-* Can be used to provide extra information about the document the user has uploaded/searched for, such as:
+
+Two main ways this will be utilised:
+1. Rather than manually uploading a pdf, the user can also select/search for a policy to summarise & ask questions about within the app
+2. Can be used to provide extra information about the document the user has uploaded/searched for, such as:
 	* Author (Council, Commission)
 	* Date of adoption
 	* Relationships (linked amendments, repeals, related directives)
 	* Keywords, summaries, multi-lingual versions.
 
--
+**Options:**
+
+- **api.epdb.eu/eurlex/**: Data only up to 2013 - too outdated.
+
+- **EUR-Lex offical webservice**: Requires manual approval by administrator - waiting for approval.
+
+- **pypi.org/project/eurlex-parser/**: Python package to download & parse any EUR-Lex document.
+
 # 6 Week Timeline
 
 ## Week 1 (21 - 27 July)
@@ -67,7 +76,7 @@ I have gotten this working decently, so the goal for this going forward is to im
 
 * Evaluate with ROUGE and BERTScore, comparing to previous baselines
 
-* Start performance optimizations on RAG Q&A (latency, edge cases)
+* Start performance optimizsations on RAG Q&A (latency, edge cases)
 
 * Begin building out web app features: document upload & display, summary output
 
