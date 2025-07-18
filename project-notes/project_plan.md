@@ -1,5 +1,5 @@
 # Project plan
-**Research question:** How can NLP methods be applied to improve the accessibility and understanding of complex EU policy documents for non-expert users through summarisation and question answering?
+**Research question:** How can NLP methods be applied to improve the accessibility (readability) and understanding (factual comprehension) of complex EU policy documents for non-expert users through summarisation and question answering?
 
 ## Key Components
 * Summarisation Model
@@ -43,7 +43,7 @@ I have gotten this working decently, so the goal for this going forward is to im
 * Display the full text.
 * Show the AI-generated summary clearly.
 * Accept user-typed questions.
-* Show the chatbot answer and highlight it in the full text (if possible).
+* Show the chatbot answer and highlight it with a supporting quote.
 
 **Stack:**
 * JavaScript React frontend
@@ -63,11 +63,18 @@ Two main ways this will be utilised:
 
 **Options:**
 
-- **api.epdb.eu/eurlex/**: Data only up to 2013 - too outdated.
-
 - **EUR-Lex offical webservice**: Requires manual approval by administrator - waiting for approval.
 
-- **pypi.org/project/eurlex-parser/**: Python package to download & parse any EUR-Lex document.
+- **pypi.org/project/eurlex-parser/**: Python package to download & parse any EUR-Lex document. 
+
+## Potential Challenges
+
+* **Ambiguous user questions**: Users may enter vague questions that are hard for the chatbot to interpret accurately (e.g. "What does this mean?" or "Is this good?"). Implement fallback responses when input is unclear.
+
+* **EUR-Lex access limitations**: Use eurlex-parser as backup if official API not approved in time.
+
+* **Parsing PDFs**: Define a pipeline to extract and clean content from official EUR-Lex PDFs. Limit accepted languages to English by extracting text & using language detection library (langdetect).
+
 
 # 6 Week Timeline
 
@@ -76,7 +83,7 @@ Two main ways this will be utilised:
 
 * Evaluate with ROUGE and BERTScore, comparing to previous baselines
 
-* Start performance optimizsations on RAG Q&A (latency, edge cases)
+* Polish RAG Q&A & integrate into backend
 
 * Begin building out web app features: document upload & display, summary output
 
