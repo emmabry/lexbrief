@@ -1,5 +1,5 @@
 from eurlex import get_data_by_celex_id, get_articles_by_celex_id
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from pdfminer.high_level import extract_text
 from langdetect import detect
 import tempfile
@@ -25,19 +25,22 @@ async def eurlex(celex_id: str):
             'related_documents': related_documents}
     
 # Validate & parse uploaded PDF
-@app.post("/validate_pdf/")
+@app.post("/validate_pdf")
 async def validate_pdf(file: UploadFile = File(...)):
+    # Validate file type
+    if file.content_type != "application/pdf":
+        raise HTTPException(status_code=400, detail="Only PDF files are supported.")
+
+    # Validate doc language is english
     with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as temp:
         contents = await file.read()
         temp.write(contents)
         temp.flush()
-
-        # Extract text using pdfminer
         extracted_text = extract_text(temp.name)
         temp.close()
-    try:
         lang = detect(extracted_text)
         if lang != 'en':
-            raise ValueError(f"Unsupported language: {lang}. Only English PDFs are supported.")
-    except Exception as e:
-        return {"error": str(e), "raw_text": extracted_text[:200]} 
+            raise HTTPException(status_code=400, detail=f"Unsupported language: {lang}. Only English PDFs are supported.")
+        
+    print(extracted_text)
+    return {'text': extracted_text}   
