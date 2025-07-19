@@ -2,6 +2,7 @@ from eurlex import get_data_by_celex_id, get_articles_by_celex_id
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from pdfminer.high_level import extract_text
 from langdetect import detect
+from models import QARequest
 import tempfile
 import re
 
@@ -37,10 +38,14 @@ async def validate_pdf(file: UploadFile = File(...)):
         temp.write(contents)
         temp.flush()
         extracted_text = extract_text(temp.name)
-        temp.close()
         lang = detect(extracted_text)
         if lang != 'en':
             raise HTTPException(status_code=400, detail=f"Unsupported language: {lang}. Only English PDFs are supported.")
         
     print(extracted_text)
     return {'text': extracted_text}   
+
+# RAG Q&A endpoint
+@app.post("/qa")
+async def qa(request: QARequest):
+    pass
