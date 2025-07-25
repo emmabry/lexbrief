@@ -39,7 +39,7 @@ input_extractions = []
 generated_summaries = []
 
 print("Generating abstractive summaries...")
-for idx, (doc_sents, sent_labels) in enumerate(zip(documents, label_data), total=len(documents)):
+for idx, (doc_sents, sent_labels) in enumerate(zip(documents, label_data)):
     selected = [s for s, l in zip(doc_sents, sent_labels) if l == 1]
     if not selected:
         selected = doc_sents[:3]  
