@@ -61,11 +61,11 @@ for doc_idx, sentences in enumerate(source_docs):
     print(f"Doc {doc_idx+1}/{len(source_docs)} done.")
 
 # Save predictions
-with open("./data/eur-lexsum/processed-data/val-bert_preds.txt", "w", encoding="utf-8") as f:
+with open("./data/eur-lexsum/processed-data/val-distilbert_preds.txt", "w", encoding="utf-8") as f:
     for doc in predictions:
         f.write(" ".join(map(str, doc)) + "\n")
 
-with open("./data/eur-lexsum/processed-data/val-bert_summaries.txt", "w", encoding="utf-8") as f:
+with open("./data/eur-lexsum/processed-data/val-distilbert_summaries.txt", "w", encoding="utf-8") as f:
     for summary in extracted_summaries:
         f.write(summary.strip() + "\n===\n")
 
