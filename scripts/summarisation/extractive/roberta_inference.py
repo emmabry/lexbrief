@@ -1,5 +1,5 @@
 import torch
-from transformers import DistilBertTokenizer, DistilBertForSequenceClassification, pipeline
+from transformers import RobertaTokenizer, RobertaForSequenceClassification
 from rouge_score import rouge_scorer
 import nltk
 
@@ -7,12 +7,10 @@ nltk.download('punkt')
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-# DISTILBERT MODEL FOR EXTRACTIVE SUMMARISATION
-
 # Load model & tokenizer
-model_path = "./models/distilbert-summarisation-v1" 
-model = DistilBertForSequenceClassification.from_pretrained(model_path)
-tokenizer = DistilBertTokenizer.from_pretrained(model_path)
+model_path = "./models/roberta" 
+model = RobertaForSequenceClassification.from_pretrained(model_path)
+tokenizer = RobertaTokenizer.from_pretrained(model_path)
 model.to(DEVICE)
 model.eval()
 
@@ -63,49 +61,16 @@ for doc_idx, sentences in enumerate(source_docs):
     print(f"Doc {doc_idx+1}/{len(source_docs)} done.")
 
 # Save predictions
-with open("./data/eur-lexsum/processed-data/val-bert_preds.txt", "w", encoding="utf-8") as f:
+with open("./data/eur-lexsum/processed-data/val-roberta_preds.txt", "w", encoding="utf-8") as f:
     for doc in predictions:
         f.write(" ".join(map(str, doc)) + "\n")
 
-with open("./data/eur-lexsum/processed-data/val-bert_summaries.txt", "w", encoding="utf-8") as f:
+with open("./data/eur-lexsum/processed-data/val-roberta_summaries.txt", "w", encoding="utf-8") as f:
     for summary in extracted_summaries:
         f.write(summary.strip() + "\n===\n")
 
-print(" Extractive inference done. Predictions & summaries saved.")
+print("Inference done. Predictions & summaries saved.")
 
-# BART FOR ABSTRACTIVE SUMMARISATION
-
-bart_summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
-
-input_extractions = []
-generated_summaries = []
-
-print("Generating abstractive summaries from DistilBERT outputs...")
-
-for input_text in extracted_summaries:
-    input_text = input_text.strip()
-    input_extractions.append(input_text)
-
-    try:
-        result = bart_summarizer(input_text, max_length=150, min_length=40, do_sample=False)
-        summary = result[0]["summary_text"]
-    except Exception as e:
-        summary = "FAILED: " + str(e)
-
-    generated_summaries.append(summary.strip())
-    
-assert len(generated_summaries) == len(target_summaries), "Mismatch in number of BART summaries and gold summaries"
-print("Abstractive summarization done.")
-
-# Save outputs
-with open("./data/eur-lexsum/processed-data/val-bart_preds.txt", "w", encoding="utf-8") as f:
-    for item in input_extractions:
-        f.write(item + "\n")
-
-with open("./data/eur-lexsum/processed-data/val-bart_summaries.txt", "w", encoding="utf-8") as f:
-    for summary in generated_summaries:
-        f.write(summary + "\n")
-        
 # Compute ROUGE scores
 scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
 
@@ -113,7 +78,7 @@ total_rouge1 = 0.0
 total_rouge2 = 0.0
 total_rougeL = 0.0
 
-for pred_sum, gold_sum in zip(generated_summaries, target_summaries):
+for pred_sum, gold_sum in zip(extracted_summaries, target_summaries):
     scores = scorer.score(gold_sum, pred_sum)
     total_rouge1 += scores['rouge1'].fmeasure
     total_rouge2 += scores['rouge2'].fmeasure
@@ -130,15 +95,15 @@ print(f"Average ROUGE-L F1: {avg_rougeL:.4f}")
 
 from bert_score import score
 
-P, R, F1 = score(generated_summaries, target_summaries, lang="en", verbose=True)
+P, R, F1 = score(extracted_summaries, target_summaries, lang="en", verbose=True)
 
 print("Average BERTScore F1:", F1.mean().item())
 
 
 """
 RESULTS:
-Average ROUGE-1 F1: 0.1010
-Average ROUGE-2 F1: 0.0444
-Average ROUGE-L F1: 0.0737
-Average BERTScore F1: 0.8042
+Average ROUGE-1 F1: 0.4631
+Average ROUGE-2 F1: 0.1676
+Average ROUGE-L F1: 0.2016
+Average BERTScore 0.8059
 """
