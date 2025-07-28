@@ -1,19 +1,18 @@
 import spacy
 import re
 import numpy as np
-from transformers import AutoTokenizer, AutoModel
+from transformers import DistilBertTokenizer
 from nltk.tokenize import sent_tokenize
 from rouge_score import rouge_scorer
 from langchain_ollama import OllamaLLM
 import subprocess
 import time
 import requests
+from distilbert import distilbert_extract
 
 nlp = spacy.load("en_core_web_sm", disable=["ner", "lemmatizer"])
-
-LEGAL_BERT_MODEL = "nlpaueb/legal-bert-base-uncased"
-tokenizer = AutoTokenizer.from_pretrained(LEGAL_BERT_MODEL)
-model = AutoModel.from_pretrained(LEGAL_BERT_MODEL)
+distilbert_model_path = "./models/distilbert-summarisation-v1"
+tokenizer = DistilBertTokenizer.from_pretrained(distilbert_model_path)
 
 def check_ollama_server():
     try:
@@ -56,57 +55,6 @@ def preprocess_eurlex(text, chunk_size=1024):
         chunks.append(" ".join(current_chunk))
     return chunks
 
-def legal_bert_extract(text, sentences_count=5, max_tokens=512):
-    sentences = sent_tokenize(text)
-    if not sentences:
-        return ""
-    
-    sub_chunks, current_chunk, current_tokens = [], [], 0
-    for sent in sentences:
-        tokens = len(tokenizer(sent)["input_ids"])
-        if current_tokens + tokens <= 512:
-            current_chunk.append(sent)
-            current_tokens += tokens
-        else:
-            sub_chunks.append(" ".join(current_chunk))
-            current_chunk, current_tokens = [sent], tokens
-    if current_chunk:
-        sub_chunks.append(" ".join(current_chunk))
-        
-    print(f"Extracting from chunk with {len(sentences)} sentences")
-
-
-    doc_embeddings = []
-    for chunk in sub_chunks:
-        inputs = tokenizer(chunk, return_tensors="pt", truncation=True, max_length=512)
-        outputs = model(**inputs)
-        embedding = outputs.last_hidden_state.mean(dim=1).detach().numpy()[0]
-        doc_embeddings.append(embedding)
-    doc_embedding = np.mean(doc_embeddings, axis=0)
-
-    sentence_embeddings = []
-    for sent in sentences:
-        inputs = tokenizer(sent, return_tensors="pt", truncation=True, max_length=512)
-        outputs = model(**inputs)
-        embedding = outputs.last_hidden_state.mean(dim=1).detach().numpy()[0]
-        sentence_embeddings.append(embedding)
-
-    scores = np.dot(sentence_embeddings, doc_embedding) / (
-        np.linalg.norm(sentence_embeddings, axis=1) * np.linalg.norm(doc_embedding)
-    )
-    top_indices = np.argsort(scores)[-sentences_count:]
-    top_sentences = [sentences[i] for i in sorted(top_indices)]
-
-    summary, current_tokens = [], 0
-    for sent in top_sentences:
-        tokens = len(tokenizer(sent)["input_ids"])
-        if current_tokens + tokens <= max_tokens:
-            summary.append(sent)
-            current_tokens += tokens
-        else:
-            break
-    return " ".join(summary)
-
 def llama_summary(text, model_name="llama3"):
     llm = OllamaLLM(model=model_name, temperature=0.1)
     prompt = (
@@ -128,7 +76,6 @@ TEXT:
 SUMMARY:
 '''
 )
-
     try:
         return llm.invoke(prompt).strip()
     except Exception as e:
@@ -167,7 +114,7 @@ if __name__ == "__main__":
     for doc_idx, document in enumerate(source_docs):
         print(f"Processing document {doc_idx + 1}/{len(source_docs)}")
         chunks = preprocess_eurlex(document, chunk_size=1500)
-        extractive_summaries = [legal_bert_extract(chunk, sentences_count=5, max_tokens=1024) for chunk in chunks]
+        extractive_summaries = [distilbert_extract(chunk, max_tokens=1024) for chunk in chunks]
         full_extractive_summary = " ".join(filter(None, extractive_summaries))
 
         print("\nExtractive Summary:\n", full_extractive_summary)
@@ -176,10 +123,9 @@ if __name__ == "__main__":
         generated_summaries.append(abstractive_summary)
         
         
-    with open("./data/eur-lexsum/processed-data/v2-legalBERT_llama_summaries2.txt", "w", encoding="utf-8") as f:
+    with open("./data/eur-lexsum/processed-data/distilbert_llama_summaries.txt", "w", encoding="utf-8") as f:
         for summary in generated_summaries:
             f.write(summary.strip() + "\n===\n")
-
 
     # Compute ROUGE scores
     scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
