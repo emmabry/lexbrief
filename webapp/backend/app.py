@@ -2,7 +2,9 @@ from eurlex import get_data_by_celex_id, get_articles_by_celex_id
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from pdfminer.high_level import extract_text
 from langdetect import detect
-from models import QARequest
+from models import QARequest, SumRequest
+from summarisation import summarise_text
+from RAG import ask_legal_question
 import tempfile
 import re
 
@@ -46,6 +48,11 @@ async def validate_pdf(file: UploadFile = File(...)):
     return {'text': extracted_text}   
 
 # RAG Q&A endpoint
-@app.post("/qa")
-async def qa(request: QARequest):
+@app.post("/ask_question")
+async def ask_question(request: QARequest):
+    pass
+
+# Summarisation endpoint
+@app.post("/summarise_text")
+async def summarise_text_endpoint(request: SumRequest):
     pass
