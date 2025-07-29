@@ -26,7 +26,7 @@ def parse_document(text):
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=800,
         chunk_overlap=200,
-        separators=["\n\n", "\n", "(?<=\. )", " ", ""]
+        separators = ["\n\n", "\n", r"(?<=\. )", " ", ""]
     )
     docs = text_splitter.create_documents([text])
 
