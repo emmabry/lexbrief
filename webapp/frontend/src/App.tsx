@@ -1,34 +1,60 @@
 import React from 'react';
 import { useState } from 'react';
 import './App.css';
-import InfoCard from './infoCard';
 import Summary from './Summary';
 import Answer from './Answer';
+import InfoCard from './infoCard';
+
+type CelexData = {
+  title: string;
+  text: string;
+  related_documents: string[];
+};
 
 function App() {
-  const [celexInfo, setCelexInfo] = useState<string | null>(null); 
+  const [celexData, setCelexData] = useState<CelexData | null>(null); 
+  const [celexId, setCelexId] = useState<string>('');
+  const [dataLoading, setDataLoading] = useState<boolean>(false);
   const [sumloading, setsumLoading] = useState<boolean>(false);
   const [ansloading, setAnsLoading] = useState<boolean>(false);
+  const [page, setPage] = useState<'landing' | 'info' | 'summary' | 'chat'>('landing');
   const [summary, setSummary] = useState<string | null>(null); 
+  const [question, setQuestion] = useState<string>('');
   const [answer, setAnswer] = useState<string | null>(null);
 
+  const fetchCelexData = async (celex: string): Promise<CelexData | null> => {
+    setDataLoading(true);
+    console.log(`Fetching CELEX data for: ${celex}`);
+    try {
+      const response = await fetch(`http://localhost:8000/eurlex/${celex}`);
+      if (!response.ok) throw new Error(`Failed to fetch CELEX data`);
+      const data = await response.json();
+      return {
+        title: data.title,
+        text: data.text,
+        related_documents: data.related_documents || [],
+      };
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
   const fetchSummary = async () => {
+    console.log(`Fetching summary for CELEX: ${celexData?.title}`);
+    setPage('summary');
     setsumLoading(true);
-    if (!celexInfo) return;
+    if (!celexData) return;
   
     try {
-      const res1 = await fetch(`http://localhost:8000/eurlex/${celexInfo}`);
-      if (!res1.ok) throw new Error(`Failed to fetch CELEX`);
-      const data = await res1.json();
-  
-      const res2 = await fetch('http://localhost:8000/summarise_text', {
+      const res = await fetch('http://localhost:8000/summarise_text', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: data.text }),
+        body: JSON.stringify({ text: celexData.text }),
       });
   
-      if (!res2.ok) throw new Error(`Failed to summarise`);
-      const summaryData = await res2.json();
+      if (!res.ok) throw new Error(`Failed to summarise`);
+      const summaryData = await res.json();
       setSummary(summaryData.summary);
       setsumLoading(false);
   
@@ -37,25 +63,24 @@ function App() {
     }
   };
 
-  const fetchAnswer = async () => {
+  const fetchAnswer = async (q: string) => {
+    console.log(`Fetching answer for question: ${q} on CELEX: ${celexData?.title}`);
+    setPage('chat');
     setAnsLoading(true);
-    if (!celexInfo) return;
+    if (!celexData) return;
 
     try {
-      const res1 = await fetch(`http://localhost:8000/eurlex/${celexInfo}`);
-      if (!res1.ok) throw new Error(`Failed to fetch CELEX`);
-      const data = await res1.json();
-
-      const res2 = await fetch('http://localhost:8000/ask_question', {
+      const res = await fetch('http://localhost:8000/ask_question', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: data.text,
-          question: "What is the aim of this act?" })
+        body: JSON.stringify({ text: celexData.text,
+          question: q })
          });
 
-         if (!res2.ok) throw new Error(`Failed to ask question`);
-         const answerData = await res2.json();
-         setAnswer(answerData.answer);
+         if (!res.ok) throw new Error(`Failed to ask question`);
+         const answerData = await res.json();
+          setPage('chat');
+          setAnswer(answerData.answer);
           setAnsLoading(false);
       } catch (err) {
         console.error(err);
@@ -64,37 +89,72 @@ function App() {
 
   return (
     <div className="App">
-      <div className="buttons">
-        <button onClick={() => setCelexInfo('32025D0047')}>Get CELEX 32025D0047</button>
-        <button onClick={() => fetchSummary()}>Summarise CELEX 32025D0047</button>
-        <p>This button asks what is the aim of this act?</p>
-        <button onClick={() => fetchAnswer()}>QA CELEX for 32025D0047</button>
+      { page === 'landing' ? (
+      <div className="main-card">
+        <h1>EUR-LEX AI assistant</h1>
+        <p>First, choose your document</p>
+        <form onSubmit={async (e) => {
+          setPage('info');
+          e.preventDefault();
+          setDataLoading(true);
+          const data = await fetchCelexData(celexId);
+          setCelexData(data);
+          setDataLoading(false);
+        }}>
+          <input
+          type="text"
+          placeholder="Enter CELEX ID"
+          value={celexId}
+          onChange={(e) => {
+            setCelexId(e.target.value);
+            }}
+          />
+          <button type="submit">Submit</button>
+        </form>
       </div>
-      <div className="info">
-      { celexInfo ? (
-        <InfoCard celex={celexInfo} />
-      ) : (
-        <p>Click a button to get CELEX information.</p>
-      )}
-    </div>
-    <div className="summary">
-      { summary ? (
-        <Summary summary={summary} />
-      ) : sumloading? (
-        <p>Loading summary...</p>
-      ) : (
-        <p>Click a button to ask about the document.</p>
-      )}
-    </div>
-    <div className="qa">
-      { answer ? (
-        <Answer answer={answer} />
-      ) : ansloading? (
-        <p>Loading answer...</p>
-      ) : (
-        <p>Click a button to ask about the document.</p>
-      )}
-    </div>
+      ) : page === 'info' ? (
+        celexData ? (
+          <div className="info-card">
+            <InfoCard {...celexData} />
+            <button onClick={() => {
+              fetchSummary();
+            }}>Summarise</button>
+          </div>
+      ) : dataLoading ? (
+          <p>Loading CELEX data...</p>
+        ) : (
+          <h1>Error: placeholder</h1>
+        )
+      ) : page === 'summary' ? ( 
+        summary ? (
+        <div className ="summary-card">
+          <Summary summary={summary} />
+          <form onSubmit={(e) => {
+            fetchAnswer(question);
+            e.preventDefault();
+          }}>
+            <input
+              type="text"
+              placeholder="Enter your question"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+            />
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+        ) : sumloading? (
+          <p>Loading summary...</p>
+        ) : (
+        <h1>Error</h1>
+      )) : page === 'chat' ? (
+        answer ? (
+          <Answer answer={answer} />
+        ) : ansloading ? (
+          <p>Loading answer...</p>
+        ) : (
+          <h1>Error</h1>
+        )
+      ) : <p>DEBUGGING</p>}
   </div>
   );
 }
