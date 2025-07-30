@@ -148,7 +148,21 @@ function App() {
         <h1>Error</h1>
       )) : page === 'chat' ? (
         answer ? (
-          <Answer answer={answer} />
+          <div className="answer-card">
+            <Answer answer={answer} />
+            <form onSubmit={(e) => {
+              fetchAnswer(question);
+              e.preventDefault();
+            }}>
+              <input
+                type="text"
+                placeholder="Ask another question"
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+              />
+              <button type="submit">Submit</button>
+            </form>
+          </div>
         ) : ansloading ? (
           <p>Loading answer...</p>
         ) : (
