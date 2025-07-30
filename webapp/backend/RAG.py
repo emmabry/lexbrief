@@ -44,8 +44,7 @@ def ask_legal_question(text, question, model_name="llama3.1"):
     llm = OllamaLLM(model=model_name, temperature=0.1)
     relevant_docs = vectorstore.similarity_search(
         question, 
-        k=3,  
-        filter={"source": "train.source"}  
+        k=3
     )
     context = "\n\nDOCUMENT EXCERPTS:\n" + "\n---\n".join([doc.page_content for doc in relevant_docs])
     
@@ -56,7 +55,7 @@ def ask_legal_question(text, question, model_name="llama3.1"):
     QUESTION: {question}
 
     RESPONSE REQUIREMENTS:
-    1. Begin with "Under [Legal Instrument]" if cited in documents
+    1. Begin with "Under [Legal Instrument]" if cited in documents, ignore this if not cited.
     2. Answer comprehensively with:
     - Key legal provisions
     - Relevant article references
