@@ -107,8 +107,8 @@ if __name__ == "__main__":
         raise ValueError(f"Target and source count mismatch. Expected {len(source_docs)}, got {len(target_summaries)}")
 
     # Limit to first 50 docs for testing
-    source_docs = source_docs[:50]
-    target_summaries = target_summaries[:50]
+    source_docs = source_docs[:10]
+    target_summaries = target_summaries[:10]
     generated_summaries = []
     
     for doc_idx, document in enumerate(source_docs):
@@ -154,3 +154,11 @@ if __name__ == "__main__":
     P, R, F1 = score(generated_summaries, target_summaries, lang="en", verbose=True)
 
     print("Average BERTScore F1:", F1.mean().item())
+    
+'''
+Average ROUGE-1 F1: 0.3272
+Average ROUGE-2 F1: 0.1123
+Average ROUGE-L F1: 0.1626
+
+Average BERTScore F1: 0.8109
+'''

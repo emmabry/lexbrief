@@ -55,7 +55,7 @@ def ask_legal_question(text, question, model_name="llama3.1"):
     QUESTION: {question}
 
     RESPONSE REQUIREMENTS:
-    1. Begin with "Under [Legal Instrument]" if cited in documents, ignore this if not cited.
+    1. Begin with "Under [Legal Instrument]" if cited in documents, do not mention this if not cited.
     2. Answer comprehensively with:
     - Key legal provisions
     - Relevant article references
