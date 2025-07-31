@@ -1,9 +1,8 @@
-import React from 'react';
 import { useState } from 'react';
 import './App.css';
-import Summary from './Summary';
-import Answer from './Answer';
-import InfoCard from './infoCard';
+import Summary from './Summary.tsx';
+import Answer from './Answer.tsx';
+import InfoCard from './infoCard.tsx';
 
 type CelexData = {
   title: string;
