@@ -20,6 +20,7 @@
 .landing-title {
   background: linear-gradient(135deg, hsl(216, 100%, 25%), hsl(216, 100%, 35%));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
