@@ -5,9 +5,6 @@ import Answer from './Answer.tsx';
 import InfoCard from './infoCard.tsx';
 import logo from './assets/artificial-intelligence.png'; 
 import search from './assets/search.svg'; 
-import Summary from './Summary';
-import Answer from './Answer';
-import InfoCard from './infoCard';
 
 type CelexData = {
   title: string;
