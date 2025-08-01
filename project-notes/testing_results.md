@@ -13,16 +13,28 @@
 - Average ROUGE-L F1: 0.2016
 - Average BERTScore 0.8059
 
+### Fine-tuned LegalBERT
+- Average ROUGE-1 F1: 0.4691
+- Average ROUGE-2 F1: 0.1710
+- Average ROUGE-L F1: 0.2043
+- Average BERTScore F1: 0.8023
+
 Although the extractive models aren't terrible, the nature of extractive summarisation means that the resulting summaries aren't very human-readable, especially for a non-legal expert. Therefore a hybrid/abstractive summarisation model is best for this particular project.
 
 ## Hybrid
 ### Fine-tuned DistilBERT + LLaMa 8B
-Average ROUGE-1 F1: 0.3250
-Average ROUGE-2 F1: 0.1009
-Average ROUGE-L F1: 0.1626
-Average BERTScore F1: 0.8128
+- Average ROUGE-1 F1: 0.3250
+- Average ROUGE-2 F1: 0.1009
+- Average ROUGE-L F1: 0.1626
+- Average BERTScore F1: 0.8128
 
-### LegalBERT & LLaMa 8B
+### LegalBERT + LLaMa 8B
+- Average ROUGE-1 F1: 0.3321
+- Average ROUGE-2 F1: 0.1005
+- Average ROUGE-L F1: 0.1649
+- Average BERTScore F1: 0.8137
+
+### Fine-tuned LegalBERT + LLaMa 8B
 
 ### Fine-tuned DistilBERT + Fine-tuned BART
 - Average ROUGE-1 F1: 0.2922
