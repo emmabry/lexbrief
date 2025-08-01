@@ -1,38 +1,69 @@
 .App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  flex-direction: column;  /* stack header and main-card vertically */
+  min-height: 100vh;       /* full viewport height */
+  background: linear-gradient(
+      to bottom,
+      hsl(0, 0%, 100%),       
+      hsl(216, 100%, 98%)     
+  );
 }
 
-.App-link {
-  color: #61dafb;
+.logo {
+  filter: brightness(0) saturate(100%) invert(13%) sepia(100%) saturate(3500%) hue-rotate(195deg) brightness(90%) contrast(105%);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.main-card {
+  transform: scale(1.05);
+}
+
+.landing-title {
+  background: linear-gradient(135deg, hsl(216, 100%, 25%), hsl(216, 100%, 35%));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-text {
+  color: hsl(222.2, 84%, 4.9%);
+  font-weight: bold;
+}
+
+.hero-text {
+  color: hsl(215.4 16.3% 46.9%);
+  font-weight: bold;
+}
+
+.celex-header {
+  color: hsl(222.2 84% 4.9%);
+}
+
+.celex-text {
+  color: hsl(215.4 16.3% 46.9%);
+}
+.celex-form {
+  background-color: white;
+}
+
+.icon-white {
+  width: 20px; 
+  filter: brightness(0) invert(1); 
+}
+
+
+.my-link {
+  color: hsl(216, 100%, 25%);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.btn.my-button {
+  background-color: hsl(216, 100%, 25%);
+  color: hsl(0, 0%, 100%);
+  border: none;
+  transition: background-color 0.3s ease;
+}
+
+.btn.my-button:hover {
+  background-color: hsla(216, 100%, 25%, 0.9);
+  color: hsl(0, 0%, 100%);
 }
