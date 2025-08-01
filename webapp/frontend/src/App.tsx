@@ -3,6 +3,11 @@ import './App.css';
 import Summary from './Summary.tsx';
 import Answer from './Answer.tsx';
 import InfoCard from './infoCard.tsx';
+import logo from './assets/artificial-intelligence.png'; 
+import search from './assets/search.svg'; 
+import Summary from './Summary';
+import Answer from './Answer';
+import InfoCard from './infoCard';
 
 type CelexData = {
   title: string;
@@ -61,7 +66,7 @@ function App() {
       console.error(err);
     }
   };
-
+  
   const fetchAnswer = async (q: string) => {
     console.log(`Fetching answer for question: ${q} on CELEX: ${celexData?.title}`);
     setPage('chat');
@@ -88,11 +93,22 @@ function App() {
 
   return (
     <div className="App">
+    <header className="d-flex justify-content-start align-items-center p-3 mb-4"> 
+      <img src={logo} width={40} height={40} className="logo" alt="EUR-LEX Logo" />
+      <h3 className="mb-1 ms-2 fs-4 fw-bold header-text">LexBrief</h3>
+    </header>
       { page === 'landing' ? (
-      <div className="main-card">
-        <h1>EUR-LEX AI assistant</h1>
-        <p>First, choose your document</p>
-        <form onSubmit={async (e) => {
+      <div className="main-card px-4 pt-5 my-5 text-center mx-auto d-flex flex-column align-items-center w-75">
+        <div className="pass w-75 mx-0">
+        <h1 className="display-4 fw-bold text-body-emphasis mb-0">AI-Powered EU Policy</h1>
+        <h1 className="landing-title display-4 fw-bold text-body-emphasis mt-0"> Document Analysis</h1>
+        <p className="hero-text fs-5 fw-medium mx-auto my-4 w-75">Get instant, intelligent summaries of EU legal documents using CELEX numbers. 
+          Streamline your policy research with advanced AI analysis.</p>
+        </div>
+        <div className="celex-form mx-auto m-4 p-3 w-75 rounded-3 shadow-sm" style={{ maxWidth: '68%' }}>
+          <h4 className="celex-header">Enter CELEX Number</h4>
+          <p className="celex-text">Input any EU legal document identifier to generate an AI summary</p>
+        <form className="p-2 d-flex" onSubmit={async (e) => {
           setPage('info');
           e.preventDefault();
           setDataLoading(true);
@@ -101,15 +117,21 @@ function App() {
           setDataLoading(false);
         }}>
           <input
+          className="form-control me-2 flex-grow-1"
           type="text"
-          placeholder="Enter CELEX ID"
+          placeholder="e.g., 32025D1267"
           value={celexId}
           onChange={(e) => {
             setCelexId(e.target.value);
             }}
           />
-          <button type="submit">Submit</button>
+          <button className="btn my-button d-flex align-items-center h-10 px-4 py-2" type="submit">
+            <img src={search} alt="Search icon" className="icon-white me-2" />
+            Summarise
+          </button>
         </form>
+        <p className="small celex-text">Don't know the CELEX number? Search for documents on <a href="google.com" className="my-link">EUR-Lex</a></p>
+        </div>
       </div>
       ) : page === 'info' ? (
         celexData ? (

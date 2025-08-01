@@ -143,7 +143,6 @@ if __name__ == "__main__":
     start_ollama_server()
 
     source_docs = []
-    current_doc = []
     with open("./data/eur-lexsum/raw-data/val.source", encoding="utf-8") as f:
         for line in f:
             source_docs.append(line)
@@ -159,29 +158,31 @@ if __name__ == "__main__":
     if len(target_summaries) != len(source_docs):
         raise ValueError(f"Target and source count mismatch. Expected {len(source_docs)}, got {len(target_summaries)}")
 
-    # Limit to first 100 docs for testing
-    source_docs = source_docs[:100]
-    target_summaries = target_summaries[:100]
+    # Limit to first 50 docs for testing
+    source_docs = source_docs[:10]
+    target_summaries = target_summaries[:10]
     generated_summaries = []
-    
+
     for doc_idx, document in enumerate(source_docs):
         print(f"Processing document {doc_idx + 1}/{len(source_docs)}")
-        chunks = preprocess_eurlex(document, chunk_size=1500)
-        extractive_summaries = [legal_bert_extract(chunk, sentences_count=5, max_tokens=1024) for chunk in chunks]
-        full_extractive_summary = " ".join(filter(None, extractive_summaries))
 
-        print("\nExtractive Summary:\n", full_extractive_summary)
-        abstractive_summary = llama_summary(full_extractive_summary)
+        # Chunk document using your preprocess (adjust chunk_size to LLaMA context, e.g. 8000 tokens)
+        chunks = preprocess_eurlex(document, chunk_size=8000)
+
+        # Instead of extractive summarisation, concatenate chunks into one string
+        full_text = " ".join(chunks)
+
+        # Directly summarize full_text with LLaMA
+        abstractive_summary = llama_summary(full_text)
+
         print("\nAbstractive Summary:\n", abstractive_summary)
         generated_summaries.append(abstractive_summary)
-        
-        
-    with open("./data/eur-lexsum/processed-data/v2-legalBERT_llama_summaries2.txt", "w", encoding="utf-8") as f:
+
+    with open("./data/eur-lexsum/processed-data/v2-llama_direct_summaries.txt", "w", encoding="utf-8") as f:
         for summary in generated_summaries:
             f.write(summary.strip() + "\n===\n")
 
-
-    # Compute ROUGE scores
+    # Evaluate with ROUGE
     scorer = rouge_scorer.RougeScorer(['rouge1', 'rouge2', 'rougeL'], use_stemmer=True)
 
     total_rouge1 = 0.0
@@ -195,24 +196,19 @@ if __name__ == "__main__":
         total_rougeL += scores['rougeL'].fmeasure
 
     n = len(generated_summaries)
-    avg_rouge1 = total_rouge1 / n
-    avg_rouge2 = total_rouge2 / n
-    avg_rougeL = total_rougeL / n
+    print(f"\nAverage ROUGE-1 F1: {total_rouge1 / n:.4f}")
+    print(f"Average ROUGE-2 F1: {total_rouge2 / n:.4f}")
+    print(f"Average ROUGE-L F1: {total_rougeL / n:.4f}")
 
-    print(f"\nAverage ROUGE-1 F1: {avg_rouge1:.4f}")
-    print(f"Average ROUGE-2 F1: {avg_rouge2:.4f}")
-    print(f"Average ROUGE-L F1: {avg_rougeL:.4f}")
-
+    # Evaluate with BERTScore
     from bert_score import score
 
     P, R, F1 = score(generated_summaries, target_summaries, lang="en", verbose=True)
-
     print("Average BERTScore F1:", F1.mean().item())
-    
-'''
-Average ROUGE-1 F1: 0.3267
-Average ROUGE-2 F1: 0.1085
-Average ROUGE-L F1: 0.1694
-Average BERTScore F1: 0.8115
 
+'''
+Average ROUGE-1 F1: 0.2895
+Average ROUGE-2 F1: 0.0839
+Average ROUGE-L F1: 0.1446
+Average BERTScore F1: 0.8050
 '''
