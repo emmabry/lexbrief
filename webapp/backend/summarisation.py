@@ -11,7 +11,7 @@ import requests
 
 nlp = spacy.load("en_core_web_sm", disable=["ner", "lemmatizer"])
 
-LEGAL_BERT_MODEL = "nlpaueb/legal-bert-base-uncased"
+LEGAL_BERT_MODEL = "./legalBERT"
 tokenizer = AutoTokenizer.from_pretrained(LEGAL_BERT_MODEL)
 model = AutoModel.from_pretrained(LEGAL_BERT_MODEL)
 

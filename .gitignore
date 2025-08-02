@@ -5,3 +5,4 @@ models/
 .env
 **/node_modules/
 __pycache__
+webapp/backend/legalBERT

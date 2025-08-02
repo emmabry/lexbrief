@@ -3,7 +3,7 @@ import './App.css';
 import Summary from './Summary.tsx';
 import Answer from './Answer.tsx';
 import Landing from './Landing.tsx';
-import InfoCard from './infoCard.tsx';
+import Loading from './Loading.tsx';
 import logo from './assets/artificial-intelligence.png'; 
 
 type CelexData = {
@@ -15,8 +15,8 @@ type CelexData = {
 function App() {
   const [celexData, setCelexData] = useState<CelexData | null>(null); 
   const [celexId, setCelexId] = useState<string>('');
+  const [sumLoading, setsumLoading] = useState<boolean>(false);
   const [dataLoading, setDataLoading] = useState<boolean>(false);
-  const [sumloading, setsumLoading] = useState<boolean>(false);
   const [ansloading, setAnsLoading] = useState<boolean>(false);
   const [page, setPage] = useState<'landing' | 'info' | 'summary' | 'chat'>('landing');
   const [summary, setSummary] = useState<string | null>(null); 
@@ -24,7 +24,6 @@ function App() {
   const [answer, setAnswer] = useState<string | null>(null);
 
   const fetchCelexData = async (celex: string): Promise<CelexData | null> => {
-    setDataLoading(true);
     console.log(`Fetching CELEX data for: ${celex}`);
     try {
       const response = await fetch(`http://localhost:8000/eurlex/${celex}`);
@@ -41,24 +40,20 @@ function App() {
     }
   }
 
-  const fetchSummary = async () => {
-    console.log(`Fetching summary for CELEX: ${celexData?.title}`);
-    setPage('summary');
-    setsumLoading(true);
-    if (!celexData) return;
-  
+  const fetchSummary = async (data: CelexData) => {
+    console.log(`Fetching summary for CELEX: ${data?.title}`);
+    if (!data) return;
     try {
       const res = await fetch('http://localhost:8000/summarise_text', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: celexData.text }),
+        body: JSON.stringify({ text: data.text }),
       });
   
       if (!res.ok) throw new Error(`Failed to summarise`);
       const summaryData = await res.json();
       setSummary(summaryData.summary);
       setsumLoading(false);
-  
     } catch (err) {
       console.error(err);
     }
@@ -90,11 +85,17 @@ function App() {
 
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
-  setPage('info');
+  setPage('summary');
   setDataLoading(true);
   const data = await fetchCelexData(celexId);
   setCelexData(data);
   setDataLoading(false);
+  setsumLoading(true);
+  if (!data) {
+    setsumLoading(false);
+    return console.error('No data found for the provided CELEX ID'); 
+  }
+  fetchSummary(data);;
 };
 
 
@@ -110,19 +111,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           setCelexId={setCelexId}
           handleSubmit={handleSubmit}
         />
-      ) : page === 'info' ? (
-        celexData ? (
-          <div className="info-card">
-            <InfoCard {...celexData} />
-            <button onClick={() => {
-              fetchSummary();
-            }}>Summarise</button>
-          </div>
-      ) : dataLoading ? (
-          <p>Loading CELEX data...</p>
-        ) : (
-          <h1>Error: placeholder</h1>
-        )
       ) : page === 'summary' ? ( 
         summary ? (
         <div className ="summary-card">
@@ -140,8 +128,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             <button type="submit">Submit</button>
           </form>
         </div>
-        ) : sumloading? (
-          <p>Loading summary...</p>
+        ) : (dataLoading || sumLoading) ? (
+          <Loading dataLoading={dataLoading} sumLoading={sumLoading} />
         ) : (
         <h1>Error</h1>
       )) : page === 'chat' ? (
