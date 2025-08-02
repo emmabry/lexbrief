@@ -34,4 +34,5 @@ function Loading({ dataLoading, sumLoading }: LoadingProps) {
     )
 }
 
+
 export default Loading;
