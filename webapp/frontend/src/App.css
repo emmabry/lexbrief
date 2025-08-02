@@ -50,7 +50,6 @@
   filter: brightness(0) invert(1); 
 }
 
-
 .my-link {
   color: hsl(216, 100%, 25%);
   text-decoration: none;
@@ -67,4 +66,72 @@
 .btn.my-button:hover {
   background-color: hsla(216, 100%, 25%, 0.9);
   color: hsl(0, 0%, 100%);
+}
+
+.load-spin {
+  color: hsl(216, 100%, 35%) !important;
+}
+
+.loading-title {
+  font-size: 2rem; 
+  font-weight: bold;
+  background: linear-gradient(
+    to right,
+    hsl(216 100% 25%),
+    hsl(216 100% 35%)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.my-active {
+  background-color: hsl(216 100% 25% / 0.1) !important;
+  font-weight: bold;
+  border: 1px solid hsl(216 100% 25% / 0.2) !important;
+}
+
+.inactive {
+  background-color: hsl(210 40% 96.1% / 0.5) !important;
+  font-weight: bold;
+  color: hsl(215.4 16.3% 46.9%) !important;
+}
+
+.loading-icon-active {
+  width : 25px;
+  height: 25px;
+  fill: hsl(210 40% 98%);
+  border-radius: 50%;
+  display: block;
+}
+
+.loading-icon-container-active {
+  width : 40px;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  background-color: hsl(216 100% 25%);
+  border-radius: 50%;
+  display: flex;
+  margin-right: 20px;
+}
+
+.loading-icon-inactive {
+  width : 25px;
+  height: 25px;
+  fill: hsl(216 100% 25%);
+  border-radius: 50%;
+  display: block;
+}
+
+.loading-icon-container-inactive {
+  width : 40px;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  background-color: hsl(216 100% 25% / 0.1);
+  border-radius: 50%;
+  display: flex;
+  margin-right: 20px;
 }
