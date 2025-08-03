@@ -129,7 +129,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           </form>
         </div>
         ) : (dataLoading || sumLoading) ? (
-          <Loading dataLoading={dataLoading} sumLoading={sumLoading} />
+          <Loading dataLoading={dataLoading} sumLoading={sumLoading} celexData={celexData} />
         ) : (
         <h1>Error</h1>
       )) : page === 'chat' ? (
