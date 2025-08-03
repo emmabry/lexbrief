@@ -1,12 +1,18 @@
 import DocIcon from './assets/doc.svg?react';
 import BrainIcon from './assets/brain.svg?react';
+import Fade from 'react-bootstrap/Fade';
 
 type LoadingProps = {
     dataLoading: boolean;
     sumLoading: boolean;
+    celexData: {
+        title: string;
+        text: string;
+        related_documents: string[];
+      } | null;
   };
 
-function Loading({ dataLoading, sumLoading }: LoadingProps) {
+function Loading({ dataLoading, sumLoading, celexData }: LoadingProps) {
     console.log(`Loading component rendered with dataLoading: ${dataLoading}, sumLoading: ${sumLoading}`);
     return (
         <div className="main-card px-4 pt-5 my-5 text-center mx-auto d-flex flex-column align-items-center w-75">
@@ -27,12 +33,33 @@ function Loading({ dataLoading, sumLoading }: LoadingProps) {
                         <BrainIcon className={`${sumLoading ? 'loading-icon-active' : 'loading-icon-inactive'}`}/>
                         </div>
                             Generating AI summary</li>
+                        <div className="preview d-flex px-3 mb-2 justify-content-start">
+                            { dataLoading ? 
+                            <div className="d-flex flex-column justify-content-start align-items-start w-100 pt-3">
+                                <p className="card-text placeholder-glow row w-100 px-2 pb-2">
+                                    <span className="placeholder bg-secondary col-9 mb-2 rounded-3"></span>
+                                    <span className="placeholder bg-secondary col-6 mb-2 rounded-3"></span>
+                                    <span className="placeholder bg-secondary col-7 mb-2 rounded-3"></span>
+                                </p>
+                            </div>
+                            :
+                                <div className="mt-4 text-start">
+                                    <Fade in={!dataLoading} appear>
+                                    <div>
+                                        <h6><span className="preview-title">Title:</span> {celexData?.title}</h6>
+                                        <p className="text-muted" style={{ maxHeight: '100px', overflow: 'auto' }}>
+                                        <span className="fw-semibold">Preview:</span> {celexData?.text?.slice(0, 200)}...
+                                        </p>
+                                    </div>
+                                    </Fade>
+                                </div>
+                                }
+                        </div>
                 </div>
-                <p className="small celex-text pt-5">This usually takes 30-60 seconds. Thank you for your patience.</p>
+                <p className="small celex-text pt-3">This usually takes 30-60 seconds. Thank you for your patience.</p>
             </div>
     </div>
     )
 }
-
 
 export default Loading;
