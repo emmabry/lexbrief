@@ -114,8 +114,8 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       ) : page === 'summary' ? ( 
         summary ? (
         <div className ="summary-card">
-          <Summary summary={summary} />
-          <form onSubmit={(e) => {
+          <Summary summary={summary} celexData={celexData} />
+          {/* <form onSubmit={(e) => {
             fetchAnswer(question);
             e.preventDefault();
           }}>
@@ -126,7 +126,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
               onChange={(e) => setQuestion(e.target.value)}
             />
             <button type="submit">Submit</button>
-          </form>
+          </form> */}
         </div>
         ) : (dataLoading || sumLoading) ? (
           <Loading dataLoading={dataLoading} sumLoading={sumLoading} celexData={celexData} />

@@ -1,7 +1,7 @@
 .App {
   display: flex;
-  flex-direction: column;  /* stack header and main-card vertically */
-  min-height: 100vh;       /* full viewport height */
+  flex-direction: column;  
+  min-height: 100vh;      
   background: linear-gradient(
       to bottom,
       hsl(0, 0%, 100%),       
@@ -15,6 +15,10 @@
 
 .main-card {
   transform: scale(1.05);
+}
+
+.loading-card {
+  background: white;
 }
 
 .landing-title {
@@ -149,4 +153,27 @@
 .preview-title {
   font-weight: bold;
   color: hsl(216 100% 25%);
+}
+
+.summary-l-card {
+  background: white;
+  width: 100%;
+  height: auto;
+}
+
+.button-icon {
+  width: 20px;
+  height: 20px;
+  fill: white;
+  transition: fill 0.3s ease;
+  margin-right: 5px;
+}
+
+.chat-icon {
+  width: 25px;
+  height: 25px;
+  fill: hsl(216, 100%, 25%);
+  transition: fill 0.3s ease;
+  margin-right: 5px;
+  margin-bottom: 7px;
 }
