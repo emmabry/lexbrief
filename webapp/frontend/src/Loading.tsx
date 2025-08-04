@@ -15,7 +15,7 @@ type LoadingProps = {
 function Loading({ dataLoading, sumLoading, celexData }: LoadingProps) {
     console.log(`Loading component rendered with dataLoading: ${dataLoading}, sumLoading: ${sumLoading}`);
     return (
-        <div className="main-card px-4 pt-5 my-5 text-center mx-auto d-flex flex-column align-items-center w-75">
+        <div className="main-card px-4 pt-3 my-5 text-center mx-auto d-flex flex-column align-items-center w-75">
             <div className="loading-card shadow p-5 pb-3 rounded-3 text-center w-50">
             <div className="spinner-border load-spin" role="status">
                     <span className="sr-only"></span>
