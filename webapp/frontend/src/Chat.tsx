@@ -57,13 +57,13 @@ function Chat({ celexData }: ChatProps) {
             )}
         {messages.map((message, index) => (
             <div key={index} className="chat-message">
-                <div className="message-text border p-2">{message}</div>
+                <div className="message border p-2">{message}</div>
                 {isLoading && index === messages.length - 1 ? (
                     <div className="loading-spinner">
                         <span className="spinner-border spinner-border-sm" role="status"></span>
                         </div>
                         ) : responses[index] ? (
-                        <div className="response-text border p-2">{responses[index]}</div>
+                        <div className="response border p-2">{responses[index]}</div>
                         ) : null}
 
             </div>
