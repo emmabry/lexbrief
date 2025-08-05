@@ -1,5 +1,7 @@
 import ChatIcon from './assets/chat.svg?react';
 import PopupIcon from './assets/popup.svg?react';
+import { useState } from 'react';
+import Chat from './Chat.tsx';
 
 type SummaryProps = {
     summary: string;
@@ -11,6 +13,7 @@ type SummaryProps = {
   };  
 
 function Summary({ summary, celexData }: SummaryProps) {
+  const [showChat, setShowChat] = useState(false);
 
     return (
       <div className='d-flex flex-row align-items-start px-5 w-100'>
@@ -33,9 +36,19 @@ function Summary({ summary, celexData }: SummaryProps) {
             <ChatIcon className="chat-icon" />
             <h4>AI Assistant</h4>
           </div>
+          { !showChat ? (
+            <div>
           <p className="text-muted">Have questions about this document? Chat with our AI assistant for detailed explanations.</p>
-            <button type="submit" className="btn my-button w-100">
+            <button type="submit" className="btn my-button w-100" onClick={() => setShowChat(true)}>
               Open chat</button>
+            </div>
+          ) : (
+          <div className="chat-opened">
+            {summary && celexData && <Chat celexData={celexData} />}
+            <button type="button" className="btn my-button w-100" onClick={() => setShowChat(false)}>
+              Close chat</button>
+          </div>
+          )}
         </div>
       </div>
     </div>
