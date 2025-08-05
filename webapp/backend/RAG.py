@@ -48,24 +48,19 @@ def ask_legal_question(text, question, model_name="llama3.1"):
     )
     context = "\n\nDOCUMENT EXCERPTS:\n" + "\n---\n".join([doc.page_content for doc in relevant_docs])
     
-    prompt = f"""You are a senior EU legal analyst. Provide a complete response to the question using ONLY the provided legal document excerpts.
+    prompt = f"""You are a senior EU legal analyst explaining a legal document to a non-expert. Provide a complete response to the question using ONLY the provided legal document excerpts.
 
     {context}
 
     QUESTION: {question}
 
     RESPONSE REQUIREMENTS:
-    1. Begin with "Under [Legal Instrument]" if cited in documents, do not mention this if not cited.
-    2. Answer comprehensively with:
-    - Key legal provisions
-    - Relevant article references
-    - Jurisdictional scope when applicable
-    3. Structure using bullet points for clarity
-    4. Never speculate - respond "Not specified in document" for missing information
-
-    ADDITIONAL RULES:
-    - Prioritize direct quotes from text
-    - Highlight definitions if present"""
+    - Answer the user's legal question based only on the document.
+    - Do not use formatting or bullet points
+    - Be brief and specific
+    - Use direct quotes from the text when possible
+    - If a legal instrument is cited, begin with: "Under [Legal Instrument]"
+    - If the answer is not found in the text, say: "Not specified in document"""
 
     try:
         response = llm.invoke(prompt)

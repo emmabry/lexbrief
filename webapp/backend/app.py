@@ -59,10 +59,10 @@ async def validate_pdf(file: UploadFile = File(...)):
 # RAG Q&A endpoint
 @app.post("/ask_question")
 async def ask_question(request: QARequest):
-    answer = ask_legal_question(request.text, request.question)
+    response = ask_legal_question(request.text, request.question)
     return {
         "question": request.question,
-        "answer": answer
+        "response": response
     }
 
 # Summarisation endpoint
