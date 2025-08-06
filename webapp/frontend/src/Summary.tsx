@@ -1,9 +1,13 @@
 import ChatIcon from './assets/chat.svg?react';
 import PopupIcon from './assets/popup.svg?react';
+
 import Chat from './Chat.tsx';
 
 type SummaryProps = {
-    summary: string;
+    summaryData: {
+      summary: string;
+      insights: string[];
+    };
     celexData: {
       title: string;
       text: string;
@@ -12,7 +16,7 @@ type SummaryProps = {
     celexId?: string;
   };  
 
-function Summary({ summary, celexData, celexId }: SummaryProps) {
+function Summary({ summaryData, celexData, celexId }: SummaryProps) {
 
     return (
       <div className='d-flex flex-row align-items-start px-5 w-100'>
@@ -26,17 +30,24 @@ function Summary({ summary, celexData, celexId }: SummaryProps) {
               View Full Text</button>
           </div>
         <div className="summary-l-card p-4 border m-3 rounded-3">
+          <div>
           <h4>Generated Summary</h4>
-          <p className="summary-text">{summary}</p>
+          <p className="summary-text">{summaryData.summary}</p>
+          </div>
+          <div>
+            <h4>Key Insights</h4>
+            {summaryData.insights.map((sentence, i) => (
+              <p key={i} className="summary-text">{sentence}.</p> ))}
+          </div>
         </div>
       </div>
       <div className="m-4" style={{ width: '35%' }}>
-        <div className="summary-l-card border p-4 m-3 rounded-3">
+        <div className="summary-l-card border p-4 m-3 chat-container rounded-3">
           <div className="d-flex align-items-center">
             <ChatIcon className="chat-icon" />
-            <h4>AI Assistant</h4>
+            <h4 className="fw-semibold">AI Assistant</h4>
           </div>
-            {summary && celexData && <Chat celexData={celexData} />}
+            {summaryData && celexData && <Chat celexData={celexData} />}
           </div>
         </div>
       </div>
