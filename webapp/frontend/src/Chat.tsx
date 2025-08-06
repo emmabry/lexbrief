@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import SendIcon from './assets/send.svg?react';
 
 type CelexData = {
     title: string;
@@ -46,20 +47,14 @@ function Chat({ celexData }: ChatProps) {
   }
 
   return (
-    <div>
-      {messages.length === 0 && (
+    <div className="chat d-flex flex-column justify-content-between">
+      <div className="chat-messages">
         <p className="response p-2 mt-2">Hello! I'm here to help you understand this document. What would you like to know?</p>
-      )}
-      {messages.length > 0 && (
-        <div className="chat-header">
-            
-        </div>
-            )}
         {messages.map((message, index) => (
             <div key={index} className="chat-message">
                 <div className="message p-2">{message}</div>
                 {isLoading && index === messages.length - 1 ? (
-                    <div className="d-flex flex-column justify-content-start align-items-start w-100 pt-3">
+                    <div className="d-flex flex-column justify-content-start align-items-start w-100 pt-3 ps-2">
                     <p className="card-text placeholder-glow row w-100 px-2 pb-2">
                         <span className="placeholder bg-secondary col-9 mb-2 rounded-3"></span>
                         <span className="placeholder bg-secondary col-6 mb-2 rounded-3"></span>
@@ -68,11 +63,12 @@ function Chat({ celexData }: ChatProps) {
                         ) : responses[index] ? (
                         <div className="response p-2">{responses[index]}</div>
                         ) : null}
-
             </div>
         ))}
+      </div>
+      <div className="chat-input pt-2">
       <form
-        className="p-2 d-flex"
+        className="d-flex"
         onSubmit={(e) => {
           e.preventDefault();
           submitNewMessage(newMessage);
@@ -85,10 +81,11 @@ function Chat({ celexData }: ChatProps) {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           />
-            <button className="btn my-button d-flex align-items-center h-10 px-4 py-2" type="submit">
-                Send
+            <button className="btn my-button d-flex align-items-center h-10" type="submit">
+                <SendIcon className="send-icon"/>
             </button>
         </form>
+    </div>
     </div>
   );
 }

@@ -17,7 +17,10 @@ function App() {
   const [sumLoading, setsumLoading] = useState<boolean>(false);
   const [dataLoading, setDataLoading] = useState<boolean>(false);
   const [page, setPage] = useState<'landing' | 'info' | 'summary' | 'chat'>('landing');
-  const [summary, setSummary] = useState<string | null>(null); 
+  const [summaryData, setSummaryData] = useState<{ summary: string; insights: string[] }>({
+    summary: '',
+    insights: [],
+  });   
 
   const fetchCelexData = async (celex: string): Promise<CelexData | null> => {
     console.log(`Fetching CELEX data for: ${celex}`);
@@ -48,7 +51,15 @@ function App() {
   
       if (!res.ok) throw new Error(`Failed to summarise`);
       const summaryData = await res.json();
-      setSummary(summaryData.summary);
+      const parts = summaryData.summary.split(/\*+KEY INSIGHTS\*+|KEY INSIGHTS/i);
+      const summaryPart = parts[0].replace(/\*+SUMMARY\*+/gi, '').trim();
+      const insightsPart = (parts[1] || '').trim();
+      const sentences: string[] = insightsPart.split('.').map((sentence: string) => sentence.trim()).filter((sentence: string) => sentence !== ''); 
+      setSummaryData({
+        summary: summaryPart?.trim() || '',
+        insights: sentences || '',
+      });
+      console.log(summaryData);
       setsumLoading(false);
     } catch (err) {
       console.error(err);
@@ -84,9 +95,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
           handleSubmit={handleSubmit}
         />
       ) : page === 'summary' ? ( 
-        summary ? (
+        summaryData.summary ? (
         <div className ="summary-card">
-          <Summary summary={summary} celexData={celexData} celexId={celexId} />
+          <Summary summaryData={summaryData} celexData={celexData} celexId={celexId} />
         </div>
         ) : (dataLoading || sumLoading) ? (
           <Loading dataLoading={dataLoading} sumLoading={sumLoading} celexData={celexData} />

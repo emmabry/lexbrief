@@ -110,21 +110,25 @@ def llama_summary(text, model_name="llama3"):
     llm = OllamaLLM(model=model_name, temperature=0.1)
     prompt = (
     f'''You are a summarisation engine for official EU legal and policy documents.
-Your task is to generate detailed, factual summaries that clearly convey the document’s purpose, obligations, scope, and legal structure.
+Summarise the document below in two distinct sections:
 
-INSTRUCTIONS:
-- Do not write in the first person or refer to yourself.
-- Do not say 'Here is a summary' or introduce the summary in any way.
-- Do not invent information not present in the text.
-- Use short, formal paragraphs.
-- Avoid bullet points. Each paragraph should focus on a single aspect (e.g., purpose, legal basis, scope, exemptions, dates, obligations).
-- Use neutral, formal language suitable for non-expert policy readers.
-- Be comprehensive. If the text is long, your summary should be proportionally detailed.
+SUMMARY:
+- A detailed, factual summary of at least 5 sentences.
+- Covers purpose, obligations, scope, and legal structure.
+- Uses short, formal paragraphs (no bullet points).
+- Neutral, formal language, no invented info.
+
+KEY INSIGHTS:
+- Exactly 3 to 5 concise sentences.
+- Each sentence highlights a key obligation, policy aim, legal mechanism, or impact.
+- Written for a non-expert reader.
+- Formal and factual tone, no speculation or editorializing.
+- Do not use bullet points; just sentences separated by spaces.
 
 TEXT:
 {text}
 
-SUMMARY:
+Output the SUMMARY section first, then the KEY INSIGHTS section clearly labeled.
 '''
 )
     try:

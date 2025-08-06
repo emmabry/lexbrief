@@ -169,6 +169,12 @@
   margin-right: 5px;
 }
 
+.chat-messages {
+  min-height: 30vh;
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
 .chat-icon {
   width: 25px;
   height: 25px;
@@ -178,12 +184,22 @@
   margin-bottom: 7px;
 }
 
+.chat-header {
+  background-color: hsl(210, 40%, 96.1%);
+}
+
 .chat-message {
   display: flex;
   flex-direction: column; 
   margin-bottom: 10px;
 }
 
+.send-icon {
+  width: 20px;
+  height: 20px;
+  stroke: "white";
+  fill: none;
+}
 
 .message {
   background-color: hsl(216, 100%, 25%);
