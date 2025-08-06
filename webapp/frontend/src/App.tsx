@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import './App.css';
 import Summary from './Summary.tsx';
-import Answer from './Answer.tsx';
 import Landing from './Landing.tsx';
 import Loading from './Loading.tsx';
 import logo from './assets/artificial-intelligence.png'; 
@@ -17,11 +16,8 @@ function App() {
   const [celexId, setCelexId] = useState<string>('');
   const [sumLoading, setsumLoading] = useState<boolean>(false);
   const [dataLoading, setDataLoading] = useState<boolean>(false);
-  const [ansloading, setAnsLoading] = useState<boolean>(false);
   const [page, setPage] = useState<'landing' | 'info' | 'summary' | 'chat'>('landing');
   const [summary, setSummary] = useState<string | null>(null); 
-  const [question, setQuestion] = useState<string>('');
-  const [answer, setAnswer] = useState<string | null>(null);
 
   const fetchCelexData = async (celex: string): Promise<CelexData | null> => {
     console.log(`Fetching CELEX data for: ${celex}`);
@@ -58,30 +54,6 @@ function App() {
       console.error(err);
     }
   };
-  
-  const fetchAnswer = async (q: string) => {
-    console.log(`Fetching answer for question: ${q} on CELEX: ${celexData?.title}`);
-    setPage('chat');
-    setAnsLoading(true);
-    if (!celexData) return;
-
-    try {
-      const res = await fetch('http://localhost:8000/ask_question', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text: celexData.text,
-          question: q })
-         });
-
-         if (!res.ok) throw new Error(`Failed to ask question`);
-         const answerData = await res.json();
-          setPage('chat');
-          setAnswer(answerData.answer);
-          setAnsLoading(false);
-      } catch (err) {
-        console.error(err);
-      }
-    };
 
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
@@ -114,47 +86,13 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       ) : page === 'summary' ? ( 
         summary ? (
         <div className ="summary-card">
-          <Summary summary={summary} celexData={celexData} />
-          {/* <form onSubmit={(e) => {
-            fetchAnswer(question);
-            e.preventDefault();
-          }}>
-            <input
-              type="text"
-              placeholder="Enter your question"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-            />
-            <button type="submit">Submit</button>
-          </form> */}
+          <Summary summary={summary} celexData={celexData} celexId={celexId} />
         </div>
         ) : (dataLoading || sumLoading) ? (
           <Loading dataLoading={dataLoading} sumLoading={sumLoading} celexData={celexData} />
         ) : (
         <h1>Error</h1>
-      )) : page === 'chat' ? (
-        answer ? (
-          <div className="answer-card">
-            <Answer answer={answer} />
-            <form onSubmit={(e) => {
-              fetchAnswer(question);
-              e.preventDefault();
-            }}>
-              <input
-                type="text"
-                placeholder="Ask another question"
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-              />
-              <button type="submit">Submit</button>
-            </form>
-          </div>
-        ) : ansloading ? (
-          <p>Loading answer...</p>
-        ) : (
-          <h1>Error</h1>
-        )
-      ) : <p>DEBUGGING</p>}
+      )) : <p>DEBUGGING</p>}
   </div>
   );
 }

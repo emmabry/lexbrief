@@ -1,6 +1,5 @@
 import ChatIcon from './assets/chat.svg?react';
 import PopupIcon from './assets/popup.svg?react';
-import { useState } from 'react';
 import Chat from './Chat.tsx';
 
 type SummaryProps = {
@@ -10,10 +9,10 @@ type SummaryProps = {
       text: string;
       related_documents: string[];
     } | null;
+    celexId?: string;
   };  
 
-function Summary({ summary, celexData }: SummaryProps) {
-  const [showChat, setShowChat] = useState(false);
+function Summary({ summary, celexData, celexId }: SummaryProps) {
 
     return (
       <div className='d-flex flex-row align-items-start px-5 w-100'>
@@ -21,7 +20,8 @@ function Summary({ summary, celexData }: SummaryProps) {
           <div className="summary-l-card border p-4 m-3 rounded-3">
             <h5>{celexData?.title}</h5>
             <p className="text-muted">Published: 14 December 2024</p>
-            <button className="btn my-button mt-3 w-100 d-flex justify-content-center align-items-center">
+            <button className="btn my-button mt-3 w-100 d-flex justify-content-center align-items-center"
+            onClick={() => window.open(`https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A${celexId}&qid=1754333530919#PP4Contents`, '_blank')}>
               <PopupIcon className="button-icon" />
               View Full Text</button>
           </div>
@@ -36,22 +36,10 @@ function Summary({ summary, celexData }: SummaryProps) {
             <ChatIcon className="chat-icon" />
             <h4>AI Assistant</h4>
           </div>
-          { !showChat ? (
-            <div>
-          <p className="text-muted">Have questions about this document? Chat with our AI assistant for detailed explanations.</p>
-            <button type="submit" className="btn my-button w-100" onClick={() => setShowChat(true)}>
-              Open chat</button>
-            </div>
-          ) : (
-          <div className="chat-opened">
             {summary && celexData && <Chat celexData={celexData} />}
-            <button type="button" className="btn my-button w-100" onClick={() => setShowChat(false)}>
-              Close chat</button>
           </div>
-          )}
         </div>
       </div>
-    </div>
     );
 }
 

@@ -48,7 +48,7 @@ function Chat({ celexData }: ChatProps) {
   return (
     <div>
       {messages.length === 0 && (
-        <p className="text-muted">Ask questions about the document or request summaries.</p>
+        <p className="response p-2 mt-2">Hello! I'm here to help you understand this document. What would you like to know?</p>
       )}
       {messages.length > 0 && (
         <div className="chat-header">
@@ -57,13 +57,16 @@ function Chat({ celexData }: ChatProps) {
             )}
         {messages.map((message, index) => (
             <div key={index} className="chat-message">
-                <div className="message border p-2">{message}</div>
+                <div className="message p-2">{message}</div>
                 {isLoading && index === messages.length - 1 ? (
-                    <div className="loading-spinner">
-                        <span className="spinner-border spinner-border-sm" role="status"></span>
-                        </div>
+                    <div className="d-flex flex-column justify-content-start align-items-start w-100 pt-3">
+                    <p className="card-text placeholder-glow row w-100 px-2 pb-2">
+                        <span className="placeholder bg-secondary col-9 mb-2 rounded-3"></span>
+                        <span className="placeholder bg-secondary col-6 mb-2 rounded-3"></span>
+                    </p>
+                </div>
                         ) : responses[index] ? (
-                        <div className="response border p-2">{responses[index]}</div>
+                        <div className="response p-2">{responses[index]}</div>
                         ) : null}
 
             </div>
