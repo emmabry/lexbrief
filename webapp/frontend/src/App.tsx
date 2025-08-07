@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './App.css';
 import Summary from './Summary.tsx';
 import Landing from './Landing.tsx';
+import Error from './Error.tsx';
 import Loading from './Loading.tsx';
 import logo from './assets/artificial-intelligence.png'; 
 
@@ -16,7 +17,8 @@ function App() {
   const [celexId, setCelexId] = useState<string>('');
   const [sumLoading, setsumLoading] = useState<boolean>(false);
   const [dataLoading, setDataLoading] = useState<boolean>(false);
-  const [page, setPage] = useState<'landing' | 'info' | 'summary' | 'chat'>('landing');
+  const [page, setPage] = useState<'landing' | 'info' | 'summary' | 'error'>('landing');
+  const [error, setError] = useState<string | null>(null);
   const [summaryData, setSummaryData] = useState<{ summary: string; insights: string[] }>({
     summary: '',
     insights: [],
@@ -26,7 +28,12 @@ function App() {
     console.log(`Fetching CELEX data for: ${celex}`);
     try {
       const response = await fetch(`http://localhost:8000/eurlex/${celex}`);
-      if (!response.ok) throw new Error(`Failed to fetch CELEX data`);
+      console.log('Response status:', response.status);
+      if (!response.ok) {
+        setPage('error')
+        setError('Failed to fetch CELEX data. Please check the CELEX ID and try again.');
+        return null;
+      }
       const data = await response.json();
       return {
         title: data.title,
@@ -48,8 +55,10 @@ function App() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text: data.text }),
       });
-  
-      if (!res.ok) throw new Error(`Failed to summarise`);
+      if (!res.ok) {
+        setPage('error')
+        setError('Failed to fetch summary. Please try again later.');
+      }
       const summaryData = await res.json();
       const parts = summaryData.summary.split(/\*+KEY INSIGHTS\*+|KEY INSIGHTS/i);
       const summaryPart = parts[0].replace(/\*+SUMMARY\*+/gi, '').trim();
@@ -76,9 +85,9 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   setsumLoading(true);
   if (!data) {
     setsumLoading(false);
-    return console.error('No data found for the provided CELEX ID'); 
+    return;
   }
-  fetchSummary(data);;
+  await fetchSummary(data);;
 };
 
 
@@ -102,8 +111,11 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         ) : (dataLoading || sumLoading) ? (
           <Loading dataLoading={dataLoading} sumLoading={sumLoading} celexData={celexData} />
         ) : (
-        <h1>Error</h1>
-      )) : <p>DEBUGGING</p>}
+          <Error error={error} />
+        )
+      ) : (
+        <Error error={error} />
+      )}
   </div>
   );
 }

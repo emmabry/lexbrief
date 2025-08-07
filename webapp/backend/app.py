@@ -35,6 +35,8 @@ async def eurlex(celex_id: str):
     text = preamble + '\n\n' + '\n\n'.join(articles)
     related_documents = data['related_documents']
     title = re.sub(r'\s+', ' ', data['title'].replace('\n', '')).strip()
+    if not title:
+        raise HTTPException(status_code=404, detail="No data found for the provided CELEX ID.")
     return {'title': title,
             'text': text,
             'related_documents': related_documents}
