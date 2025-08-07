@@ -4,7 +4,6 @@ import SendIcon from './assets/send.svg?react';
 type CelexData = {
     title: string;
     text: string;
-    related_documents: string[];
   };
   
   type ChatProps = {

@@ -79,20 +79,20 @@ Two main ways this will be utilised:
 # 6 Week Timeline
 
 ## Week 1 (21 - 27 July)
-* Develop and test hybrid extractive + abstractive summarisation pipeline
+* Develop and test hybrid extractive + abstractive summarisation pipeline ✓
 
-* Evaluate with ROUGE and BERTScore, comparing to previous baselines
+* Evaluate with ROUGE and BERTScore, comparing to previous baselines ✓
 
-* Polish RAG Q&A & integrate into backend
+* Polish RAG Q&A & integrate into backend ✓
 
 * Begin building out web app features: document upload & display, summary output
 
 ## Week 2 (28 Jul - 3 Aug)
-* Finalise summarisation method
+* Finalise summarisation method ✓
 
-* Complete integration of summariser and RAG Q&A into backend pipeline
+* Complete integration of summariser and RAG Q&A into backend pipeline ✓
 
-* Continue frontend development: implement question input, chatbot output
+* Continue frontend development: implement question input, chatbot output ✓
 
 * Integrate EUR-Lex API for document search and metadata display
 
@@ -101,11 +101,11 @@ Two main ways this will be utilised:
 ## Week 3 (4 - 10 Aug)
 * Testing & bug fixing on summariser and QA pipeline integration
 
-* Complete main web app functionality (upload/search, summarise, Q&A)
+* Complete main web app functionality (upload/search, summarise, Q&A) ✓
 
 * Start internal user testing for usability and accuracy feedback
 
-* Prepare rough demo version of the app
+* Prepare rough demo version of the app ✓
 
 ## Week 4 (11 - 17 Aug)
 * Collect and analyse feedback from internal testing; improve models and UI

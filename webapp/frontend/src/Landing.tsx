@@ -33,7 +33,9 @@ function Landing({ celexId, setCelexId, handleSubmit }: LandingProps) {
             Summarise
           </button>
         </form>
-        <p className="small celex-text">Don't know the CELEX number? Search for documents on <a href="google.com" className="my-link">EUR-Lex</a></p>
+        <p className="small celex-text">Don't know the CELEX number? Search for documents on <a href="https://eur-lex.europa.eu/homepage.html" 
+        className="my-link" target="_blank"
+        rel="noopener noreferrer">EUR-Lex</a></p>
         </div>
       </div>
     );

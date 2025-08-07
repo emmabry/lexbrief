@@ -222,3 +222,28 @@
   width: fit-content;
   max-width: 80%;
 }
+
+.link-icon {
+  width: 18px;
+  height: 18px;
+  fill: hsl(216, 100%, 25%);
+  transition: fill 0.3s ease;
+  margin-right: 5px;
+  margin-bottom: 4px;
+}
+
+.reference-box {
+  display: flex;
+  align-items: center;        
+  justify-content: space-between;
+}
+
+.modifies {
+  background-color: hsl(216, 100%, 25%);
+  color: hsl(0, 0%, 100%);
+}
+
+.modified {
+  background-color: hsl(210, 40%, 96.1%);
+  color: hsl(222.2, 84%, 4.9%);
+}

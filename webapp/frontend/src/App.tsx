@@ -9,7 +9,10 @@ import logo from './assets/artificial-intelligence.png';
 type CelexData = {
   title: string;
   text: string;
-  related_documents: string[];
+  related_documents: {
+    modifies: []; 
+    modified_by: [];
+  };
 };
 
 function App() {
