@@ -18,7 +18,7 @@ function App() {
   const [sumLoading, setsumLoading] = useState<boolean>(false);
   const [dataLoading, setDataLoading] = useState<boolean>(false);
   const [page, setPage] = useState<'landing' | 'info' | 'summary' | 'error'>('landing');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>('Unknown error occurred. Please try again later.');
   const [summaryData, setSummaryData] = useState<{ summary: string; insights: string[] }>({
     summary: '',
     insights: [],
