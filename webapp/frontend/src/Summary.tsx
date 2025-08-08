@@ -1,6 +1,8 @@
 import ChatIcon from './assets/chat.svg?react';
 import PopupIcon from './assets/popup.svg?react';
 import LinkIcon from './assets/link.svg?react';
+import ReactMarkdown from 'react-markdown';
+
 
 import Chat from './Chat.tsx';
 
@@ -45,16 +47,16 @@ function Summary({ summaryData, celexData, celexId }: SummaryProps) {
   (celexData?.related_documents?.modified_by?.length ?? 0) > 0
 ) && (
   <div className="border-top">
-    <h6 className="mt-4"> <LinkIcon className="link-icon"/>Related Documents</h6>
     {(celexData?.related_documents?.modifies?.length ?? 0) > 0 && (
       <div>
+        <h6 className="mt-4"> <LinkIcon className="link-icon"/>Acts affected by this legislation</h6>
           {celexData?.related_documents.modifies.map((item, idx) => (
             <div key={idx} className="border reference-box p-2 rounded-3 mb-2">
               <div className="d-flex">
                 <p className="rounded-5 border small fw-semibold px-2 mb-0 me-2">{item.Act.celex}</p>
-                <p className="rounded-5 modifies small fw-semibold px-2 mb-0">Modifies this act</p>
+                <p className="rounded-5 modifies small fw-semibold px-2 mb-0">Repealed</p>
               </div>
-              <p className="mb-0"><PopupIcon className="link-icon"/></p>
+              <a href={item.Act.url} target="_blank" rel="noopener noreferrer" className="mb-0"><PopupIcon className="link-icon"/></a>
             </div>
           ))}
       </div>
@@ -62,13 +64,14 @@ function Summary({ summaryData, celexData, celexId }: SummaryProps) {
 
     {(celexData?.related_documents?.modified_by?.length ?? 0) > 0 && (
       <div>
+        <h6 className="mt-4"> <LinkIcon className="link-icon"/>Acts that affect this legislation</h6>
           {celexData?.related_documents.modified_by.map((item, idx) => (
            <div key={idx} className="border reference-box p-2 rounded-3 mb-2">
            <div className="d-flex">
              <p className="rounded-5 border small fw-semibold px-2 mb-0 me-2">{item.Act.celex}</p>
-             <p className="rounded-5 modified small fw-semibold px-2 mb-0">Modified by this act</p>
+             <p className="rounded-5 modified small fw-semibold px-2 mb-0">Modifies this act</p>
            </div>
-           <p className="mb-0"><PopupIcon className="link-icon"/></p>
+             <a href={item.Act.url} target="_blank" rel="noopener noreferrer" className="mb-0"><PopupIcon className="link-icon"/></a>
          </div>
             ))}
       </div>
@@ -79,12 +82,12 @@ function Summary({ summaryData, celexData, celexId }: SummaryProps) {
         <div className="summary-l-card p-4 border m-3 rounded-3">
           <div>
           <h4>Generated Summary</h4>
-          <p className="summary-text">{summaryData.summary}</p>
+          <p className="summary-text"><ReactMarkdown>{summaryData.summary}</ReactMarkdown></p>
           </div>
           <div>
             <h4>Key Insights</h4>
             {summaryData.insights.map((sentence, i) => (
-              <p key={i} className="summary-text">{sentence}.</p> ))}
+              <p key={i} className="summary-text"><ReactMarkdown>{`${sentence}.`}</ReactMarkdown></p> ))}
           </div>
         </div>
       </div>

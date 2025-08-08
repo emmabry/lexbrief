@@ -85,7 +85,7 @@ Two main ways this will be utilised:
 
 * Polish RAG Q&A & integrate into backend ✓
 
-* Begin building out web app features: document upload & display, summary output
+* Begin building out web app features: summary output ✓
 
 ## Week 2 (28 Jul - 3 Aug)
 * Finalise summarisation method ✓
@@ -94,12 +94,12 @@ Two main ways this will be utilised:
 
 * Continue frontend development: implement question input, chatbot output ✓
 
-* Integrate EUR-Lex API for document search and metadata display
+* Integrate EUR-Lex API for document search and metadata display ✓
 
 * Develop pre-generated questions feature
 
 ## Week 3 (4 - 10 Aug)
-* Testing & bug fixing on summariser and QA pipeline integration
+* Testing & bug fixing on summariser and QA pipeline integration ✓
 
 * Complete main web app functionality (upload/search, summarise, Q&A) ✓
 

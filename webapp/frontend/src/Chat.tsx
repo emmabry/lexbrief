@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import SendIcon from './assets/send.svg?react';
+import ReactMarkdown from 'react-markdown';
 
 type CelexData = {
     title: string;
@@ -60,7 +61,7 @@ function Chat({ celexData }: ChatProps) {
                     </p>
                 </div>
                         ) : responses[index] ? (
-                        <div className="response p-2">{responses[index]}</div>
+                        <div className="response p-2"><ReactMarkdown>{responses[index]}</ReactMarkdown></div>
                         ) : null}
             </div>
         ))}
