@@ -45,6 +45,11 @@ Although the extractive models aren't terrible, the nature of extractive summari
 - Average ROUGE-2 F1: 0.0793
 - Average ROUGE-L F1: 0.1523
 
+### Fine-tuned LegalBERT + Fine-tuned BART
+- Average ROUGE-1 F1: 0.2987
+- Average ROUGE-2 F1: 0.0811
+- Average ROUGE-L F1: 0.1556
+
 - **BUT** upon inspection, the abstractive summaries are completely unrelated to the source document, and the model seems to fall back on a few distinct summaries. In a sample of 10 summaries, '2019/821' was given as the regulation number for 6 documents, and 2019/972 for 4. Even testing with an external model finetuned on the same dataset (MikaSie/RoBERTa_BART_dependent_V1), the same issue arises.
 
 ## Abstractive

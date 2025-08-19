@@ -7,8 +7,8 @@ import numpy as np
 import nltk
 from nltk.tokenize import sent_tokenize
 from transformers import (
-    DistilBertTokenizer,
-    DistilBertForSequenceClassification,
+    BertTokenizer,
+    BertForSequenceClassification,
     pipeline
 )
 from rouge_score import rouge_scorer
@@ -18,15 +18,14 @@ nltk.download("punkt")
 nlp = spacy.load("en_core_web_sm", disable=["ner", "lemmatizer"])
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-DISTILBERT_MODEL_PATH = "./models/distilbert-summarisation-v1"
-
+DISTILBERT_MODEL_PATH = "./models/legalBERT"
 # Load DistilBERT model
-tokenizer = DistilBertTokenizer.from_pretrained(DISTILBERT_MODEL_PATH)
-model = DistilBertForSequenceClassification.from_pretrained(DISTILBERT_MODEL_PATH).to(DEVICE)
+tokenizer = BertTokenizer.from_pretrained(DISTILBERT_MODEL_PATH)
+model = BertForSequenceClassification.from_pretrained(DISTILBERT_MODEL_PATH).to(DEVICE)
 model.eval()
 
 # Load BART summarizer
-bart_summarizer = pipeline("summarization", model="emmabry/eurlexbart", device=0 if torch.cuda.is_available() else -1)
+bart_summarizer = pipeline("summarization", model="facebook/bart-large-cnn", device=0 if torch.cuda.is_available() else -1)
 
 def preprocess_text(text, chunk_size=1024):
     text = re.sub(

@@ -20,7 +20,7 @@ def start_ollama_server():
         subprocess.Popen(["ollama", "serve"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         time.sleep(5)
     if not check_ollama_server():
-        raise RuntimeError("Failed to start Ollama server. Ensure it's installed and port 11434 is free.")
+        raise RuntimeError("Failed to start Ollama server.")
     
 def parse_document(text):
     text_splitter = RecursiveCharacterTextSplitter(
@@ -44,7 +44,7 @@ def ask_legal_question(text, question, model_name="llama3.1"):
     llm = OllamaLLM(model=model_name, temperature=0.1)
     relevant_docs = vectorstore.similarity_search(
         question, 
-        k=3
+        k=5
     )
     context = "\n\nDOCUMENT EXCERPTS:\n" + "\n---\n".join([doc.page_content for doc in relevant_docs])
     

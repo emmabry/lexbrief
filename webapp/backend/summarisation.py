@@ -51,7 +51,10 @@ def preprocess_eurlex(text, chunk_size=1024):
             current_tokens += tokens
         else:
             chunks.append(" ".join(current_chunk))
-            current_chunk, current_tokens = [sent], tokens
+            overlap = 3
+            overlap_start = max(0, len(current_chunk) - overlap)
+            current_chunk = current_chunk[overlap_start:] + [sent]
+            current_tokens = sum(len(tokenizer(s)["input_ids"]) for s in current_chunk)
     if current_chunk:
         chunks.append(" ".join(current_chunk))
     return chunks
