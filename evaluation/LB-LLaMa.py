@@ -13,6 +13,9 @@ import requests
 
 nlp = spacy.load("en_core_web_sm", disable=["ner", "lemmatizer"])
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print(f"Using device: {device}")
+
 LEGAL_BERT_MODEL = "./models/legalBERT"
 tokenizer = AutoTokenizer.from_pretrained(LEGAL_BERT_MODEL)
 model = AutoModelForSequenceClassification.from_pretrained(LEGAL_BERT_MODEL)
@@ -69,9 +72,11 @@ def legal_bert_extract(text, max_tokens=512):
 
     for sent in sentences:
         inputs = tokenizer(sent, return_tensors="pt", truncation=True, max_length=512)
+        inputs = {k: v.to(device) for k, v in inputs.items()}  # move inputs to GPU
         with torch.no_grad():
             logits = model(**inputs).logits
             pred = torch.argmax(logits, dim=1).item()
+
         if pred == 1:
             tokens = len(tokenizer(sent)["input_ids"])
             if current_tokens + tokens <= max_tokens:
