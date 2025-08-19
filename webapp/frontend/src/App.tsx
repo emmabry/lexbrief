@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import './App.css';
-import Summary from './Summary.tsx';
-import Landing from './Landing.tsx';
-import Error from './Error.tsx';
-import Loading from './Loading.tsx';
+import './styles/App.css';
+import Summary from './components/Summary.tsx';
+import Landing from './components/Landing.tsx';
+import Error from './components/Error.tsx';
+import Loading from './components/Loading.tsx';
 import logo from './assets/artificial-intelligence.png'; 
 
 type CelexData = {

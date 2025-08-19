@@ -1,5 +1,5 @@
-import DocIcon from './assets/doc.svg?react';
-import BrainIcon from './assets/brain.svg?react';
+import DocIcon from '../assets/doc.svg?react';
+import BrainIcon from '../assets/brain.svg?react';
 import Fade from 'react-bootstrap/Fade';
 
 type LoadingProps = {

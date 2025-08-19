@@ -40,6 +40,12 @@ Although the extractive models aren't terrible, the nature of extractive summari
 - Average ROUGE-L F1: 0.1652
 - Average BERTScore F1: 0.8136
 
+### Textrank, Fine-tuned LegalBERT + LLaMa 8B
+- Average ROUGE-1 F1: 0.3237
+- Average ROUGE-2 F1: 0.0978
+- Average ROUGE-L F1: 0.1610
+- Average BERTScore F1:  0.8126
+
 ### Fine-tuned DistilBERT + Fine-tuned BART
 - Average ROUGE-1 F1: 0.2922
 - Average ROUGE-2 F1: 0.0793

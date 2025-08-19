@@ -147,25 +147,21 @@ if __name__ == "__main__":
         raise ValueError(f"Target and source count mismatch. Expected {len(source_docs)}, got {len(target_summaries)}")
 
     # Limit to first 10 docs for testing
-    source_docs = source_docs[:10]
-    target_summaries = target_summaries[:10]
+    source_docs = source_docs[:100]
+    target_summaries = target_summaries[:100]
     generated_summaries = []
 
     for doc_idx, document in enumerate(source_docs):
         print(f"\nProcessing document {doc_idx + 1}/{len(source_docs)}")
 
-        # --- APPLY TEXTRANK BEFORE CHUNKING ---
         filtered_text = textrank_filter(document, keep_ratio=0.75)
 
-        # --- CHUNKING ---
         chunks = preprocess_eurlex(filtered_text, chunk_size=1500)
 
-        # --- EXTRACTIVE SUMMARISATION ---
         extractive_summaries = [legal_bert_extract(chunk, max_tokens=1024) for chunk in chunks]
         full_extractive_summary = " ".join(filter(None, extractive_summaries))
         print("\nExtractive Summary:\n", full_extractive_summary)
 
-        # --- ABSTRACTIVE SUMMARISATION ---
         abstractive_summary = llama_summary(full_extractive_summary)
         print("\nAbstractive Summary:\n", abstractive_summary)
 

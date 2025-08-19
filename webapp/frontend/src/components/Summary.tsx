@@ -1,6 +1,6 @@
-import ChatIcon from './assets/chat.svg?react';
-import PopupIcon from './assets/popup.svg?react';
-import LinkIcon from './assets/link.svg?react';
+import ChatIcon from '../assets/chat.svg?react';
+import PopupIcon from '../assets/popup.svg?react';
+import LinkIcon from '../assets/link.svg?react';
 import ReactMarkdown from 'react-markdown';
 
 
@@ -56,7 +56,7 @@ function Summary({ summaryData, celexData, celexId }: SummaryProps) {
                 <p className="rounded-5 border small fw-semibold px-2 mb-0 me-2">{item.Act.celex}</p>
                 <p className="rounded-5 modifies small fw-semibold px-2 mb-0">Repealed</p>
               </div>
-              <a href={item.Act.url} target="_blank" rel="noopener noreferrer" className="mb-0"><PopupIcon className="link-icon"/></a>
+              <a href={item.Act.url} target="_blank" rel="noopener noreferrer" aria-label={`Open ${item.Act.celex} in a new tab`} className="mb-0"><PopupIcon className="link-icon"/></a>
             </div>
           ))}
       </div>
@@ -71,7 +71,7 @@ function Summary({ summaryData, celexData, celexId }: SummaryProps) {
              <p className="rounded-5 border small fw-semibold px-2 mb-0 me-2">{item.Act.celex}</p>
              <p className="rounded-5 modified small fw-semibold px-2 mb-0">Modifies this act</p>
            </div>
-             <a href={item.Act.url} target="_blank" rel="noopener noreferrer" className="mb-0"><PopupIcon className="link-icon"/></a>
+             <a href={item.Act.url} target="_blank" rel="noopener noreferrer" aria-label={`Open ${item.Act.celex} in a new tab`} className="mb-0"><PopupIcon className="link-icon"/></a>
          </div>
             ))}
       </div>

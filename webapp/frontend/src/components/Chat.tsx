@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import SendIcon from './assets/send.svg?react';
+import SendIcon from '../assets/send.svg?react';
 import ReactMarkdown from 'react-markdown';
 
 type CelexData = {
@@ -81,7 +81,7 @@ function Chat({ celexData }: ChatProps) {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           />
-            <button className="btn my-button d-flex align-items-center h-10" type="submit">
+            <button className="btn my-button d-flex align-items-center h-10" type="submit" aria-label="Send message">
                 <SendIcon className="send-icon"/>
             </button>
         </form>
