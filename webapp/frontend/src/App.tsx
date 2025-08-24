@@ -66,7 +66,9 @@ function App() {
       const parts = summaryData.summary.split(/\*+KEY INSIGHTS\*+|KEY INSIGHTS/i);
       const summaryPart = parts[0].replace(/\*+SUMMARY\*+/gi, '').trim();
       const insightsPart = (parts[1] || '').trim();
-      const sentences: string[] = insightsPart.split('.').map((sentence: string) => sentence.trim()).filter((sentence: string) => sentence !== ''); 
+      const sentences: string[] = insightsPart
+  .split('\n')
+  .filter((s: string) => s !== '');
       setSummaryData({
         summary: summaryPart?.trim() || '',
         insights: sentences || '',

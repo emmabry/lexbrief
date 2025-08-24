@@ -97,7 +97,7 @@ KEY INSIGHTS:
 - Each sentence highlights a key obligation, policy aim, legal mechanism, or impact.
 - Written for a non-expert reader.
 - Formal and factual tone, no speculation or editorializing.
-- Do not use bullet points; just sentences separated by spaces.
+- Use bullet points and a new line for each insight.
 
 TEXT:
 {text}

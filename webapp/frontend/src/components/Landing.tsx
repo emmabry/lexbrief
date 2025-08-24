@@ -12,8 +12,8 @@ function Landing({ celexId, setCelexId, handleSubmit }: LandingProps) {
         <div className="pass w-75 mx-0">
         <h1 className="display-4 fw-bold text-body-emphasis mb-0">AI-Powered EU Policy</h1>
         <h1 className="landing-title display-4 fw-bold text-body-emphasis mt-0"> Document Analysis</h1>
-        <p className="hero-text fs-5 fw-medium mx-auto my-4 w-75">Get instant, intelligent summaries of EU legal documents using CELEX numbers. 
-          Streamline your policy research with advanced AI analysis.</p>
+        <p className="hero-text fs-5 fw-medium mx-auto my-4 w-75">Quick, easy summaries of EU laws and regulations. 
+        AI that reads, explains, and summarises policies for you.</p>
         </div>
         <div className="celex-form mx-auto m-4 p-3 w-75 rounded-3 shadow-sm" style={{ maxWidth: '68%' }}>
           <h4 className="celex-header">Enter CELEX Number</h4>
