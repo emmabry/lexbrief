@@ -12,7 +12,7 @@ import requests
 
 nlp = spacy.load("en_core_web_sm", disable=["ner", "lemmatizer"])
 
-LEGAL_BERT_MODEL = "./legalBERT"
+LEGAL_BERT_MODEL = "emmabry/legalBERTft"
 tokenizer = AutoTokenizer.from_pretrained(LEGAL_BERT_MODEL)
 model = AutoModelForSequenceClassification.from_pretrained(LEGAL_BERT_MODEL)
 model.eval()

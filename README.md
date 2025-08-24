@@ -12,8 +12,6 @@ Clone the repository to your local machine:
 git clone https://git.cs.bham.ac.uk/projects-2024-25/erb465.git
 cd erb465
 ```
-
-
 ## 2. Navigate to the backend
 
 ```bash
