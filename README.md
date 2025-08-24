@@ -12,12 +12,7 @@ Clone the repository to your local machine:
 git clone https://git.cs.bham.ac.uk/projects-2024-25/erb465.git
 cd erb465
 ```
-## 2. Navigate to the backend
-
-```bash
-cd webapp
-cd backend
-```
+## 2. Set up backend
 
 Create and activate the virtual environment:
 
@@ -32,25 +27,33 @@ Install the required Python dependencies:
 pip install -r requirements.txt
 ```
 
+Navigate to the backend folder
+
+```bash
+cd webapp
+cd backend
+```
+
 Run the FastAPI backend:
 
 ```bash
 python -m fastapi dev app.py  
 ```
 
-## 3. Navigate to the frontend
+## 3. Set up frontend
+
+Navigate to the frontend folder and install dependencies:
 
 ```bash
 cd ../../frontend
 npm install
 ```
 
-Run the frontend in development mode:
+Run the frontend:
 
 ```bash
 npm run dev
 ```
 
-## 4. Navigate to the web page
-
 The frontend runs on port 5173.
+http://localhost:5173/
