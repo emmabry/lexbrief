@@ -1,5 +1,6 @@
 import random
 
+# balances the number of positive and negative labels in the dataset
 def balance_source_and_labels(source_path, labels_path, output_source_path, output_labels_path):
     random.seed(42)
 

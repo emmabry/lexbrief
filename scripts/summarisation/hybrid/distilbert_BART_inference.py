@@ -18,7 +18,7 @@ nltk.download("punkt")
 nlp = spacy.load("en_core_web_sm", disable=["ner", "lemmatizer"])
 
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-DISTILBERT_MODEL_PATH = "./models/legalBERT"
+DISTILBERT_MODEL_PATH = "./models/distilbert-summarisation-v1"
 # Load DistilBERT model
 tokenizer = BertTokenizer.from_pretrained(DISTILBERT_MODEL_PATH)
 model = BertForSequenceClassification.from_pretrained(DISTILBERT_MODEL_PATH).to(DEVICE)
@@ -27,6 +27,7 @@ model.eval()
 # Load BART summarizer
 bart_summarizer = pipeline("summarization", model="facebook/bart-large-cnn", device=0 if torch.cuda.is_available() else -1)
 
+# Clean text and split into chunks
 def preprocess_text(text, chunk_size=1024):
     text = re.sub(
         r"\[\d+\]|\(\d+\)|Official Journal.*?L \d+/\d+|^\s*Having regard.*?\n|"
@@ -53,6 +54,7 @@ def preprocess_text(text, chunk_size=1024):
 
     return chunks
 
+# Extractive summarisation using DistilBERT
 def distilbert_extract(sentences, tokenizer, model, device, max_tokens=512):
     predictions = []
     for sent in sentences:
@@ -74,6 +76,7 @@ def distilbert_extract(sentences, tokenizer, model, device, max_tokens=512):
             break
     return " ".join(summary)
 
+# Abstractive summarisation using BART
 def bart_summarise(text):
     try:
         result = bart_summarizer(text, max_length=150, min_length=40, do_sample=False)
@@ -81,6 +84,7 @@ def bart_summarise(text):
     except Exception as e:
         return f"FAILED: {str(e)}"
 
+# Evaluate summaries using ROUGE and BERTScore
 def evaluate_summaries(preds, refs):
     scorer = rouge_scorer.RougeScorer(["rouge1", "rouge2", "rougeL"], use_stemmer=True)
     total_r1 = total_r2 = total_rl = 0.0

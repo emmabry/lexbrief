@@ -12,6 +12,7 @@ def get_trigrams(text):
     words = text.split()
     return set(zip(words, words[1:], words[2:]))
 
+# Creates a golden extractive summary using a greedy algorithm which maximises ROUGE-1 score
 def greedy_extractive_summary(source_sentences, target_summary, max_sentences=32, trigram_blocking=True):
     scorer = rouge_scorer.RougeScorer(['rouge1'], use_stemmer=True)
     selected = []

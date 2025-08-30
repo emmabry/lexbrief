@@ -55,6 +55,7 @@ def preprocess_eurlex(text, chunk_size=1024):
         chunks.append(" ".join(current_chunk))
     return chunks
 
+# Abstractive summarisation with LLaMa via Ollama
 def llama_summary(text, model_name="llama3"):
     llm = OllamaLLM(model=model_name, temperature=0.1)
     prompt = (
