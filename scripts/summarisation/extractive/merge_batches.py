@@ -12,8 +12,7 @@ batch_numbers = sorted(
 )
 
 # Open output files
-with open(os.path.join(data_dir, output_summary), "w", encoding="utf-8") as out_sum, 
-     open(os.path.join(data_dir, output_labels), "w", encoding="utf-8") as out_lab:
+with open(os.path.join(data_dir, output_summary), "w", encoding="utf-8") as out_sum, open(os.path.join(data_dir, output_labels), "w", encoding="utf-8") as out_lab:
 
     for batch_num in batch_numbers:
         sum_file = os.path.join(data_dir, f"{summary_prefix}{batch_num}.txt")

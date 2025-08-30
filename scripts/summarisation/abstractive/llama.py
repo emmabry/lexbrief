@@ -28,7 +28,7 @@ def start_ollama_server():
         subprocess.Popen(["ollama", "serve"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         time.sleep(5)
     if not check_ollama_server():
-        raise RuntimeError("Failed to start Ollama server. Ensure it's installed and port 11434 is free.")
+        raise RuntimeError("Failed to start Ollama server.")
 
 def preprocess_eurlex(text, chunk_size=1024):
     text = re.sub(
@@ -166,13 +166,13 @@ if __name__ == "__main__":
     for doc_idx, document in enumerate(source_docs):
         print(f"Processing document {doc_idx + 1}/{len(source_docs)}")
 
-        # Chunk document using your preprocess (adjust chunk_size to LLaMA context, e.g. 8000 tokens)
+        # Chunk document using preprocessing function
         chunks = preprocess_eurlex(document, chunk_size=8000)
 
-        # Instead of extractive summarisation, concatenate chunks into one string
+        # concatenate chunks into one string
         full_text = " ".join(chunks)
 
-        # Directly summarize full_text with LLaMA
+        # use LLaMa to generate abstractive summary
         abstractive_summary = llama_summary(full_text)
 
         print("\nAbstractive Summary:\n", abstractive_summary)

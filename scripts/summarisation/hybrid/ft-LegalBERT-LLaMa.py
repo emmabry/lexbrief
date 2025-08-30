@@ -134,8 +134,8 @@ if __name__ == "__main__":
         raise ValueError(f"Target and source count mismatch. Expected {len(source_docs)}, got {len(target_summaries)}")
 
     # Limit to first 100 docs for testing
-    source_docs = source_docs[:10]
-    target_summaries = target_summaries[:10]
+    source_docs = source_docs[:100]
+    target_summaries = target_summaries[:100]
     generated_summaries = []
     
     for doc_idx, document in enumerate(source_docs):

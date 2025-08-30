@@ -111,7 +111,7 @@ if __name__ == "__main__":
     print(f"Kept {len(filtered_sources)} / {len(source_docs)} docs")
     print(f"Skipped {len(skipped_sources)} docs")
 
-    # Save skipped docs for record
+    # Save skipped docs for reference
     with open("./data/eur-lexsum/raw-data/skipped-val.source", "w", encoding="utf-8") as f:
         for doc in skipped_sources:
             for sent in doc:

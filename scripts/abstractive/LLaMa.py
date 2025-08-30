@@ -15,6 +15,7 @@ LEGAL_BERT_MODEL = "nlpaueb/legal-bert-base-uncased"
 tokenizer = AutoTokenizer.from_pretrained(LEGAL_BERT_MODEL)
 model = AutoModel.from_pretrained(LEGAL_BERT_MODEL)
 
+# Ollama runs locally
 def check_ollama_server():
     try:
         response = requests.get("http://localhost:11434")
@@ -28,8 +29,9 @@ def start_ollama_server():
         subprocess.Popen(["ollama", "serve"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         time.sleep(5)
     if not check_ollama_server():
-        raise RuntimeError("Failed to start Ollama server. Ensure it's installed and port 11434 is free.")
+        raise RuntimeError("Failed to start Ollama server.")
 
+# Preprocess funtion to clean & chunk documents
 def preprocess_eurlex(text, chunk_size=1024):
     text = re.sub(
         r"\[\d+\]|\(\d+\)|Official Journal.*?L \d+/\d+|^\s*Having regard.*?\n|"
@@ -141,7 +143,8 @@ def evaluate_summary(generated, reference):
 
 if __name__ == "__main__":
     start_ollama_server()
-
+    
+    # Load source docs
     source_docs = []
     with open("./data/eur-lexsum/raw-data/val.source", encoding="utf-8") as f:
         for line in f:
@@ -159,20 +162,20 @@ if __name__ == "__main__":
         raise ValueError(f"Target and source count mismatch. Expected {len(source_docs)}, got {len(target_summaries)}")
 
     # Limit to first 50 docs for testing
-    source_docs = source_docs[:10]
-    target_summaries = target_summaries[:10]
+    source_docs = source_docs[:50]
+    target_summaries = target_summaries[:50]
     generated_summaries = []
 
     for doc_idx, document in enumerate(source_docs):
         print(f"Processing document {doc_idx + 1}/{len(source_docs)}")
 
-        # Chunk document using your preprocess (adjust chunk_size to LLaMA context, e.g. 8000 tokens)
+        # Chunk document using preprocessing function
         chunks = preprocess_eurlex(document, chunk_size=8000)
 
-        # Instead of extractive summarisation, concatenate chunks into one string
+        # concatenate chunks into one string
         full_text = " ".join(chunks)
 
-        # Directly summarize full_text with LLaMA
+        # use LLaMa to generate abstractive summary
         abstractive_summary = llama_summary(full_text)
 
         print("\nAbstractive Summary:\n", abstractive_summary)

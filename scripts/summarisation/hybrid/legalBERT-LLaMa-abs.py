@@ -28,7 +28,7 @@ def start_ollama_server():
         subprocess.Popen(["ollama", "serve"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         time.sleep(5)
     if not check_ollama_server():
-        raise RuntimeError("Failed to start Ollama server. Ensure it's installed and port 11434 is free.")
+        raise RuntimeError("Failed to start Ollama server.")
 
 def preprocess_eurlex(text, chunk_size=1024):
     text = re.sub(

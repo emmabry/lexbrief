@@ -55,5 +55,5 @@ Run the frontend:
 npm run dev
 ```
 
-The frontend runs on port 5173.
+The frontend runs on port 5173. Access it by visiting:
 http://localhost:5173/
